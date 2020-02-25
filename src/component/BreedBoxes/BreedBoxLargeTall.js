@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, ActivityIndicator, ScrollView, Keyboard } from 'react-native';
-import { Hp, Wp, formatHeight, formatWeight, isIos } from '../../lib/util';
+import { Hp, Wp, formatHeight, formatWeight, isIos, bigPic } from '../../lib/util';
 import { font } from '../../styles/variables';
 import { Navigation } from 'react-native-navigation';
 import FastImage from 'react-native-fast-image';
@@ -35,14 +35,16 @@ class BreedBoxLargeTall extends Component {
         const { breed, isFavorite, heightUnitOfMeasure, weightUnitOfMeasure } = this.props;
         const { loadingPicture, finalPicture } = this.state;
         const placeholder = require('../../assets/images/placeholder.png');
-        const breedPicture = breed.pictures && breed.pictures[0] && breed.pictures[0].replace("200px", "500px") ? {uri : breed.pictures[0].replace("200px", "500px")} : require('../../assets/images/dog-placeholder.png');
-        const breedOrigin = breed.origin.replace('United Kingdom', '')
-                                        .replace('(', '').replace(')', '')
+        const breedPicture = breed.pictures && breed.pictures[0] && bigPic(breed.pictures[0]) ? {uri : bigPic(breed.pictures[0])} : require('../../assets/images/dog-placeholder.png');
+        const breedCountry = breed.country.replace('(', '')
+                                        .replace(')', '')
                                         .replace('/', ', ')
                                         .replace(' - ', ', ')
                                         .replace('\n', '')
                                         .replace('Democratic Republic of the Congo', 'Congo')
-                                        .replace('United States', 'U.S.A');
+                                        .replace('United States', 'U.S.A')
+                                        .replace('Developed in the ', '')
+                                        .replace('Developed in ', '');
 
         return (
             <TouchableOpacity activeOpacity={1}
@@ -83,44 +85,38 @@ class BreedBoxLargeTall extends Component {
                 </ScrollView>
                 <View style={styles.contentContainer}>
                         <View style={{flex: 1 }}>
-                            <View style={{ flexDirection: 'row', flex: 1,  paddingTop: Hp(0.002) }}>
+                            <View style={{ flexDirection: 'row', flex: 1,  }}>
                                     <View style={{flex: 1}}>
-                                        <Text numberOfLines={1} style={[styles.nameText, {marginTop: -Hp(0.005), paddingRight: Wp(0.05), flex: 1}]}>{breed.name}</Text>
+                                        <Text numberOfLines={1} style={[styles.nameText, { paddingRight: Wp(0.05), flex: 1}]}>{breed.name}</Text>
                                         <Text style={[ styles.descriptionText, {paddingBottom: Hp(0.002)}]}>{breed.breedGroup}</Text>
                                     </View>
                                     <View style={{}}>
-                                        <Text numberOfLines={2} style={[styles.featureText, {maxWidth: Wp(0.2), textAlign: 'right'}]}>{breedOrigin}</Text>
+                                        <Text numberOfLines={2} style={[styles.featureText, {maxWidth: Wp(0.2), textAlign: 'right'}]}>{breed.origin}</Text>
                                     </View>
                             </View>
                         </View>
-                        <View style={{flex: 0.7, borderTopWidth: Hp(0.0015), paddingVertical: Hp(0.008), borderTopColor: 'rgba(223, 223, 223, 1)', justifyContent: 'center' }}>
-                            <View style={{ flexDirection: 'row', justifyContent:'space-between', paddingHorizontal: Wp(0.005) }}>
-                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                            <FastImage resizeMode={'contain'} source={require('../../assets/icons/dog-2.png')}
-                                                       style={[styles.featureIcon, {height: Hp(0.028), width:  Hp(0.028)}]} />
-                                            <View style={{}}>
-                                                <Text style={[styles.featureText, {paddingTop: Hp(0.009)}]}>{breed.heightRange && breed.heightRange.min ? formatHeight(heightUnitOfMeasure, breed.heightRange.min, breed.heightRange.max) : breed.heightRange}</Text>
-                                            </View>
-                                </View>
-                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                            <FastImage source={require('../../assets/icons/scale-8.png')}
-                                                       style={[styles.featureIcon, {marginTop: Hp(0.002)}]} 
-                                                       resizeMode={'contain'}
-                                                       />
-                                            <View style={{}}>
-                                                <Text style={[styles.featureText, {paddingTop: Hp(0.009)}]}>{breed.weightRange && breed.weightRange.min ? formatWeight(weightUnitOfMeasure, breed.weightRange.min, breed.weightRange.max) : breed.weightRange}</Text>
-                                            </View>
-                                </View>
-                                {breed.lifeSpan ? 
-                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                    <FastImage source={require('../../assets/icons/lifespan-2.png')}
-                                               style={[styles.featureIcon, {height: Hp(0.025), width: Hp(0.025), marginTop: Hp(0.0035)}]} 
-                                               resizeMode={'contain'}
-                                               />
-                                    <View style={{}}>
-                                        <Text style={[styles.featureText, {paddingTop: Hp(0.009)}]}>{breed.lifeSpan.replace('years', 'ys')}</Text>
+                        <View style={{flex: 1, borderTopWidth: Hp(0.0015), paddingVertical: Hp(0.008), borderTopColor: 'rgba(223, 223, 223, 1)', }}>
+                            <View style={{ flexDirection: 'row', flex:1, paddingHorizontal: Wp(0.005) }}>
+                                <View style={{flex: 1}}>
+                                    <View style={{flex: 1, flexDirection: 'row', alignItems: 'center' }}>
+                                                <FastImage resizeMode={'contain'} source={require('../../assets/icons/origin-3.png')}
+                                                        style={[styles.featureIcon, {height: Hp(0.021), width:  Hp(0.021)}]} />
+                                                <View style={{}}>
+                                                    <Text numberOfLines={1} style={[styles.featureText, {paddingTop: Hp(0.006)}]}>{breedCountry}</Text>
+                                                </View>
                                     </View>
-                                </View> : null}
+                                </View>
+                                <View style={{flexDirection: 'row'}}>
+                                    <View style={{flexDirection: 'row', alignItems: 'center' }}>
+                                                <FastImage source={require('../../assets/icons/pattern.png')}
+                                                        style={[styles.featureIcon]} 
+                                                        resizeMode={'contain'}
+                                                        />
+                                                <View style={{marginTop: Hp(0.005) }}>
+                                                    <Text numberOfLines={1} style={[styles.featureText]}>{breed.pattern}</Text>
+                                                </View>
+                                    </View>
+                                </View>
                             </View>
                         </View>
                     </View>

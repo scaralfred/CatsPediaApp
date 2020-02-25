@@ -10,6 +10,7 @@ import {
     ActivityIndicator,
     TouchableOpacity
 } from 'react-native';
+import ImageZoom from 'react-native-image-pan-zoom';
 import { Hp, Wp, isIos, isIphoneX, bigPic } from '../../lib/util';
 
 const { width, height } = Dimensions.get('window');
@@ -107,23 +108,29 @@ class CarouselModal extends Component {
                                                 </View>
                                                 : null}
                                                 {finalPicture ?
-                                                <FastImage  resizeMode={'contain'} 
-                                                            source={{ uri: bigPic(uri) }} 
-                                                            style={{ width, height}} 
-                                                            onLoadStart={()=> {
-                                                            // setTimeout(() => {
-                                                            //     // alert(loadingPicture)
-                                                            //     loadingPicture ? this.setState({finalPicture: false, loadingPicture: false}) : null
-                                                            // }, 5000);
-                                                            this.setState({loadingPicture: true})
-                                                            }}
-                                                            onLoad={()=> {
-                                                            this.setState({finalPicture: true, loadingPicture: false})
-                                                            }}
-                                                            onLoadError={()=> {
-                                                            this.setState({finalPicture: false, loadingPicture: false})
-                                                            }}
-                                                /> :
+                                                // <ImageZoom cropWidth={Wp(1)}
+                                                //            cropHeight={Hp(1)}
+                                                //            imageWidth={width}
+                                                //            imageHeight={height}>
+                                                    <FastImage  resizeMode={'contain'} 
+                                                                source={{ uri: bigPic(uri) }} 
+                                                                style={{ width, height}} 
+                                                                onLoadStart={()=> {
+                                                                // setTimeout(() => {
+                                                                //     // alert(loadingPicture)
+                                                                //     loadingPicture ? this.setState({finalPicture: false, loadingPicture: false}) : null
+                                                                // }, 5000);
+                                                                this.setState({loadingPicture: true})
+                                                                }}
+                                                                onLoad={()=> {
+                                                                this.setState({finalPicture: true, loadingPicture: false})
+                                                                }}
+                                                                onLoadError={()=> {
+                                                                this.setState({finalPicture: false, loadingPicture: false})
+                                                                }}
+                                                    /> 
+                                                // </ImageZoom>
+                                                :
                                                 <FastImage  resizeMode={'cover'} 
                                                             source={placeholder} 
                                                             style={styles.carouselImage}

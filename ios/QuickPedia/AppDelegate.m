@@ -7,6 +7,7 @@
 
 #import "RNSplashScreen.h"
 #import "RNSplashScreen.h"
+#import "RNSplashScreen.h"
 #import "AppDelegate.h"
 
 #import <React/RCTBridge.h>

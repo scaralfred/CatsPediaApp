@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, ActivityIndicator, ScrollView, Keyboard } from 'react-native';
-import { Hp, Wp } from '../../lib/util';
+import { Hp, Wp, mediumPic } from '../../lib/util';
 import { font } from '../../styles/variables';
 import { Navigation } from 'react-native-navigation';
 import FastImage from 'react-native-fast-image';
@@ -36,9 +36,8 @@ class BreedBoxLarge extends Component {
         const {breed, isFavorite} = this.props;
         const { loadingPicture, finalPicture } = this.state;
         const placeholder = require('../../assets/images/placeholder.png');
-        const breedPicture = breed.pictures && breed.pictures.length > 0 ? {uri : breed.pictures[0]} : require('../../assets/images/dog-placeholder.png');
-        const breedOrigin = breed.origin.replace('United Kingdom', '')
-                                        .replace('(', '').replace(')', '')
+        const breedPicture = breed.pictures && breed.pictures.length > 0 ? {uri : mediumPic(breed.pictures[0])} : require('../../assets/images/dog-placeholder.png');
+        const breedCountry = breed.country.replace('(', '').replace(')', '')
                                         .replace('/', ', ')
                                         .replace(' - ', ', ')
                                         .replace('\n', '')
@@ -83,12 +82,12 @@ class BreedBoxLarge extends Component {
                    <View style={{flex: 0.7 }}>
                         <View style={{flex: 1 , flexDirection: 'row'}}>
                                 <View style={{flex: 1, justifyContent: 'center', paddingRight: Wp(0.03),  }}>
-                                    <Text style={styles.nameText}>{breed.name}</Text>
+                                    <Text numberOfLines={3} style={styles.nameText}>{breed.name}</Text>
                                     {/* <Text style={[styles.featureText, {fontFamily: font.regular}]}>{breed.origin}</Text> */}
                                 </View>
                                 <View style={{ maxWidth: '40%'}}>
                                     <View style={{ flexDirection:'row', alignItems: 'center'}}>
-                                    <Text numberOfLines={3} style={[styles.featureText, {lineHeight: Hp(0.022), paddingTop: Hp(0.003), fontFamily: font.regular, textAlign: 'right'}]}>{breedOrigin}</Text>
+                                    <Text numberOfLines={4} style={[styles.featureText, {lineHeight: Hp(0.022), paddingTop: Hp(0.003), fontFamily: font.regular, textAlign: 'right'}]}>{breedCountry}</Text>
                                         {/* <Image source={require('../../assets/icons/origin-color-2.png')}
                                                style={styles.breedFeatureIcon}
                                         /> */}
@@ -101,29 +100,8 @@ class BreedBoxLarge extends Component {
                    <View style={{flex: 0.3, justifyContent: 'flex-end'}}>
                         <View style={{flex: 1, flexDirection: 'row', alignItems: 'flex-end'}}>
                             <View style={{flex: 1,  flexDirection:'row', alignItems: 'center'}}>
-                                {/* <Image source={require('../../assets/icons/origin-2.png')}
-                                           style={[styles.breedFeatureIcon, {height: Hp(0.023), width: Hp(0.023)}]}
-                                /> */}
-                                <Text style={[styles.featureText, { paddingRight: Hp(0.008), paddingLeft: 0, fontFamily: font.medium}]}>{breed.breedGroup}</Text>
-                            </View>
-                            <View style={{ flexDirection:'row', alignItems: 'center'}}>
-                                <View style={{position: 'absolute', bottom: 20, right: 0,}}>
-                                    <FastImage source={sizeCalculator(breed).icon}
-                                               resizeMode={'contain'}
-                                               style={[
-                                                        sizeCalculator(breed).size == 'Toy' ?
-                                                        styles.breedFeatureIconToy :
-                                                        sizeCalculator(breed).size == 'Small' ?
-                                                        styles.breedFeatureIconSmall :
-                                                        sizeCalculator(breed).size == 'Medium' ?
-                                                        styles.breedFeatureIconMedium :
-                                                        sizeCalculator(breed).size == 'Big' ?
-                                                        styles.breedFeatureIconBig :
-                                                        styles.breedFeatureIcon
-                                                    ]}
-                                    />
-                                </View>
-                                <Text style={styles.featureText}>{sizeCalculator(breed).size}</Text>
+                                <Text style={[styles.featureText, { paddingRight: Hp(0.008), paddingLeft: 0, fontFamily: font.medium}]}>
+                                    {breed.origin}</Text>
                             </View>
                         </View>
                    </View>

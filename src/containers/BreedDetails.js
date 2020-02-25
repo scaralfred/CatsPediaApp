@@ -3,13 +3,13 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as globalActions from '../reducers/global/globalActions';
 import { View, ScrollView, Text, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator, Image, TouchableWithoutFeedback } from 'react-native';
-import { Hp, Wp, onLayout, bigPic, formatHeight, formatWeight, isIos, isIphoneX, isAndroid, objectToArray, objectToArrayFilterMainRate } from '../lib/util';
+import { Hp, Wp, onLayout, bigPic, capitalizeString, isIos, isIphoneX, isAndroid, objectToArray, objectToArrayFilterMainRate } from '../lib/util';
 import { font } from '../styles/variables';
 import { Navigation } from 'react-native-navigation';
+import Swiper from 'react-native-swiper';
 import Carousel from 'react-native-looped-carousel';
 import LinearGradient from 'react-native-linear-gradient';
 import { FloatingBackArrow } from '../component/UI/FloatingBackArrow';
-import SlidingUpPanel from 'rn-sliding-up-panel';
 import InstaPics from '../component/InstaPics/InstaPics';
 import Collapsible from 'react-native-collapsible';
 import FlickrPics from '../component/FlickrPics/FlickrPics';
@@ -57,31 +57,7 @@ class BreedDetails extends Component {
         });
     }
 
-    renderHeader(){
-        const { breed, isFavorite } = this.props;
-
-        return (
-            <View style={styles.header}>
-                <TouchableOpacity onPress={() => Navigation.pop(this.props.componentId)}
-                    activeOpacity={0.8}
-                    style={styles.backButtonContainer}>
-                    <FastImage source={require('../assets/icons/left-arrow-black.png')}
-                               style={{ width: Wp(0.07), height: Wp(0.07)}}
-                               resizeMode={'contain'}
-                    />
-                </TouchableOpacity>
-                <View style={styles.titleContainer}>
-                    <Text style={styles.headerText}>{breed.name}</Text>
-                </View>
-                <TouchableOpacity activeOpacity={0.8} style={styles.contextualMenuContainer}>
-                    <FastImage source={require('../assets/icons/three-dots-black.png')}
-                               style={{ width: Wp(0.07), height: Wp(0.07) }}
-                               resizeMode={'contain'}
-                    />
-                </TouchableOpacity>
-            </View>
-        )
-    }
+  
 
     renderCarousel(){
         const { breed } = this.props;
@@ -167,16 +143,14 @@ class BreedDetails extends Component {
         const { breed, favorites } = this.props; 
         const isFavorite = favorites.includes(breed.id);
         const origin = breed.origin || null;
+        const originDescription = breed.originDescription || null;
+        const country = breed.countryDescription || null;
         return (
+            <View>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <View style={{flex: 1}}>
                     <Text style={[styles.nameText, {  }]}>{breed.name}</Text>
-                    {origin ?
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={styles.originTitle}>Origin:</Text>
-                            <Text style={styles.originText}> {origin}</Text>
-                        </View>
-                    : null}
+                    
                 </View>
                 <View style={{ flexDirection: 'row', alignSelf: 'flex-start', marginTop: -Hp(0.013), paddingRight: Wp(0.018),  marginRight: Wp(-0.036)}}>
                     <TouchableOpacity activeOpacity={0.8}
@@ -204,59 +178,72 @@ class BreedDetails extends Component {
                     </TouchableOpacity>
                 </View>
             </View>
+                <View style={{flexDirection: 'row', flex: 1}}>
+                    {country ?
+                        <View style={{ flexDirection: 'row', flex: 1 }}>
+                            <Text style={styles.originTitle}>Country:{country && originDescription ? '\n' : " "}<Text style={[styles.originText, {lineHeight: Hp(0.03)}]}>{capitalizeString(country)}</Text></Text>
+                            
+                        </View>
+                    : null}
+                    {originDescription ?
+                        <View style={{ flexDirection: 'row', flex: 1,paddingLeft: Wp(0.06)  }}>
+                            <Text style={styles.originTitle}>Origin story:{country && originDescription ? '\n' : " "}<Text style={[styles.originText, {lineHeight: Hp(0.03)}]}>{`${capitalizeString(originDescription)}`}</Text></Text>
+                            
+                        </View>
+                    : null}
+                </View>
+            </View>
         )
     }
 
    renderFeaturesSection() {
-       const { breedGroup, lifeSpan, weightRange, heightRange } = this.props.breed;
-       const { heightUnitOfMeasure, weightUnitOfMeasure } = this.props;
+       const {origin, bodyType, coatLength, pattern } = this.props.breed;
        
        return (
            <View style={{ marginBottom: Hp(0.025), marginTop: Hp(0.01)}}>
                <View style={styles.featureRow}>
                         <View style={{ flexDirection: 'row', flex: 1 }}>
-                            <FastImage source={require('../assets/icons/dog-4.png')}
+                            <FastImage source={require('../assets/icons/origin.png')}
+                                       style={styles.featureIcon} 
+                                       resizeMode={'contain'}
+                                       />
+                            <View style={{}}>
+                                <Text style={styles.featureTitle}>Origin:</Text>
+                                <Text style={styles.featureText}>{origin}</Text>
+                            </View>
+                        </View>
+                        <View style={{ flexDirection: 'row', flex: 1, marginLeft: Wp(0.06)}}>
+                            <FastImage source={require('../assets/icons/cat-body-type.png')}
                                        style={styles.featureIcon} 
                                        resizeMode={'contain'}
                                    />
                             <View style={{}}>
-                               <Text style={styles.featureTitle}>Breed Group: </Text>
-                               <Text style={styles.featureText}>{breedGroup}</Text>
+                               <Text style={styles.featureTitle}>Body type: </Text>
+                               <Text style={styles.featureText}>{bodyType}</Text>
                             </View>
                         </View>
-                        {lifeSpan ?
+                </View>
+                <View style={styles.featureRow}>
+                        <View style={{ flexDirection: 'row', flex: 1 }}>
+                            <FastImage source={require('../assets/icons/pattern.png')}
+                                       style={styles.featureIcon} 
+                                       resizeMode={'contain'}
+                                   />
+                            <View style={{}}>
+                               <Text style={styles.featureTitle}>Pattern: </Text>
+                               <Text style={styles.featureText}>{pattern}</Text>
+                            </View>
+                        </View>
                         <View style={{ flexDirection: 'row', flex: 1, marginLeft: Wp(0.06) }}>
-                            <FastImage source={require('../assets/icons/lifespan-2.png')}
+                            <FastImage source={require('../assets/icons/coat-length.png')}
                                        style={styles.featureIcon} 
                                        resizeMode={'contain'}
                                        />
                             <View style={{}}>
-                                <Text style={styles.featureTitle}>Life Span:</Text>
-                                <Text style={styles.featureText}>{lifeSpan.replace('years', 'ys')}</Text>
-                            </View>
-                        </View> : null}
-                </View>
-                <View style={styles.featureRow}>
-                        <View style={{ flexDirection: 'row', flex: 1 }}>
-                            <FastImage source={require('../assets/icons/dog-2.png')}
-                                       style={[styles.featureIcon, {height: Hp(0.05), width: Hp(0.05), marginTop: Hp(0.018), marginRight: Wp(0.022)}]} 
-                                       resizeMode={'contain'}
-                                       />
-                            <View style={{}}>
-                                <Text style={styles.featureTitle}>Height:</Text>
-                                <Text style={styles.featureText}>{heightRange && heightRange.min ? formatHeight(heightUnitOfMeasure, heightRange.min, heightRange.max) : heightRange}</Text>
+                                <Text style={styles.featureTitle}>Coat length:</Text>
+                                <Text style={styles.featureText}>{coatLength}</Text>
                             </View>
                         </View>
-                       <View style={{ flexDirection: 'row', flex: 1, marginLeft: Wp(0.06) }}>
-                           <FastImage source={require('../assets/icons/scale-8.png')}
-                                      style={styles.featureIcon}
-                                      resizeMode={'contain'}
-                                      />
-                           <View style={{}}>
-                                <Text style={styles.featureTitle}>Weight:</Text>
-                                <Text style={styles.featureText}>{weightRange && weightRange.min ? formatWeight(weightUnitOfMeasure, weightRange.min, weightRange.max) : weightRange}</Text>
-                           </View>
-                       </View>
                 </View>
            </View>
        )
@@ -292,142 +279,65 @@ class BreedDetails extends Component {
     }
 
     renderCharacteristics(){
-        const { characteristics, heightRange} = this.props.breed;
-        const adaptability = characteristics && characteristics.adaptability ? characteristics.adaptability : null;
-        const friendliness = characteristics && characteristics.friendliness ? characteristics.friendliness : null;
-        const grooming = characteristics && characteristics.grooming ? characteristics.grooming : null;
-        const trainability = characteristics && characteristics.trainability ? characteristics.trainability : null;
-        const exerciseNeeds = characteristics && characteristics.exerciseNeeds ? characteristics.exerciseNeeds : null;
+        const { characteristics } = this.props.breed;
+        
+        const affectionateWithFamily = characteristics && characteristics.affectionateWithFamily ? characteristics.affectionateWithFamily : null;
+        const amountOfShedding = characteristics && characteristics.amountOfShedding ? characteristics.amountOfShedding : null;
+        const generalHealth = characteristics && characteristics.generalHealth ? characteristics.generalHealth : null;
+        const potentialForPlayfulness = characteristics && characteristics.potentialForPlayfulness ? characteristics.potentialForPlayfulness : null;
+        const tendencyToVocalize = characteristics && characteristics.tendencyToVocalize ? characteristics.tendencyToVocalize : null;
+        const kidFriendly = characteristics && characteristics.kidFriendly ? characteristics.kidFriendly  : null;
+        const friendlyTowardStrangers = characteristics && characteristics.friendlyTowardStrangers ? characteristics.friendlyTowardStrangers : null;
+        const easyToGroom = characteristics && characteristics.easyToGroom ? characteristics.easyToGroom : null;
+        const intelligence = characteristics && characteristics.intelligence ? characteristics.intelligence : null;
+        const petFriendly = characteristics && characteristics.petFriendly ? characteristics.petFriendly : null;
 
-        const abilities = [{adaptability}, {friendliness}, {grooming}, {trainability}, {"exercise Needs": exerciseNeeds}, "View More"];
+        const abilities = [
+            affectionateWithFamily, amountOfShedding, generalHealth, potentialForPlayfulness, tendencyToVocalize,
+            kidFriendly, friendlyTowardStrangers, easyToGroom, intelligence, petFriendly
+        ];
 
-        if (characteristics && (adaptability || friendliness || grooming || trainability || exerciseNeeds) ) {
+        if (characteristics && (affectionateWithFamily || amountOfShedding || generalHealth || potentialForPlayfulness || tendencyToVocalize ||
+            kidFriendly || friendlyTowardStrangers || easyToGroom || intelligence || petFriendly) ) {
             if (!this.state.featuresExpanded) {
                 return (
-                        <View>
-                            <View style={{ paddingBottom: Hp(0.01) }}> 
-                                    <FlatList contentContainerStyle={{ padding: Wp(0.005), paddingVertical: Hp(0.01) }}
+                            <View style={{ paddingTop: Hp(0.02) }}> 
+                                    <Text style={[styles.sectionTitleText, {paddingBottom: Hp(0.02)}]}>Characteristics</Text>
+                                    <FlatList //contentContainerStyle={{ padding: Wp(0.005), paddingVertical: Hp(0.01) }}
                                             data={abilities}
-                                            numColumns={2}
-                                            columnWrapperStyle={{paddingBottom: Hp(0.01)}}
+                                            numColumns={1}
+                                            // columnWrapperStyle={{paddingBottom: Hp(0.01)}}
                                             keyExtractor={(item, index) => index}
                                             renderItem={({item}) => {
-                                            const abilityName = Object.keys(item)[0];
-                                            
-                                                
-                                                if (item == "View More") {
-                                                    return (
-                                                        <TouchableOpacity onPress={()=> this.setState({featuresExpanded: !this.state.featuresExpanded})}
-                                                                          activeOpacity={0.8} 
-                                                                          style={{ flex: 1, justifyContent: 'center'}}>
-                                                            <Text style={[styles.featureTitle, {paddingLeft: Wp(0.04), paddingTop: 0,color: this.props.theme.primaryColor}]}>View More</Text>
-                                                        </TouchableOpacity>
-                                                    )
-                                                } else {
-                                                    const fullStars = Array.from(Array(Number(Object.values(item[abilityName].mainRate)[0])).keys());
-                                                    const emptyStars = Array.from(Array(5 - Number(Object.values(item[abilityName].mainRate)[0])).keys());
+                                                    const abilityName = item && item.name ? item.name : null;
+                                                    const fullStars = item && item.rate ? [...Array(parseInt(item.rate)).keys()] : null;
+                                                    const emptyStars = item && item.rate ? Array.from(Array(5 - Number(parseInt(item.rate))).keys()) : null;
 
-                                                    return (
-                                                        <TouchableOpacity onPress={()=> this.setState({featuresExpanded: !this.state.featuresExpanded})}
-                                                                          activeOpacity={0.8}
-                                                                          style={{ flex: 1}}>
-                                                                <Text style={[styles.featureTitle, {textTransform: 'capitalize', paddingBottom: Hp(0.005)}]}>{abilityName}: </Text>
-                                                                <View style={{flexDirection: 'row'}}>
+                                                    if (item) {
+                                                        return (
+                                                            <View style={{flexDirection: 'row', paddingBottom: Hp(0.01)}}>
+                                                                <View style={{flex: 1, paddingRight: Wp(0.05)}}>
+                                                                    <Text style={[styles.featureTitleSmall, {textTransform: 'capitalize', paddingBottom: Hp(0.005)}]}>{abilityName}</Text>
+                                                                </View>
+                                                                <View style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center'}}>
                                                                     {fullStars.map(el => {
                                                                         return <FastImage resizeMode={'contain'}
-                                                                                        style={styles.abilityStarImage} 
+                                                                                        style={styles.abilityStarImageSmall} 
                                                                                         source={require('../assets/icons/star-yellow-black-shape.png')}/>
                                                                     })}
                                                                     {emptyStars.map(el => {
                                                                         return <FastImage resizeMode={'contain'}
-                                                                                        style={styles.abilityStarImage} 
+                                                                                        style={styles.abilityStarImageSmall} 
                                                                                         source={require('../assets/icons/star-empty-black.png')}/>
                                                                     })}
                                                                 </View>
-                                                        </TouchableOpacity>
-                                                    )
+                                                            </View>
+                                                        )
+                                                    }
                                                 }
-                                            }}
+                                            }
                                     />
                             </View>
-                        </View>
-                )
-            } else {
-                return (
-                    <View style={{ paddingBottom: Hp(0.01) }}> 
-                          <FlatList contentContainerStyle={{ padding: Wp(0.005), paddingVertical: Hp(0.01) }}
-                                    data={abilities}
-                                    numColumns={1}
-                                    keyExtractor={(item, index) => index}
-                                    renderItem={({item}) => {
-                                            if (item !== "View More") {
-                                                const abilityName = Object.keys(item)[0];
-                                            
-                                                const fullStars = Array.from(Array(Number(Object.values(item[abilityName].mainRate)[0])).keys());
-                                                const emptyStars = Array.from(Array(5 - Number(Object.values(item[abilityName].mainRate)[0])).keys());
-                                            
-                                            return (
-                                                <View style={{paddingBottom: Hp(0.02)}}>
-                                                    <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-                                                            <Text style={[styles.featureTitleExpanded, {textTransform: 'capitalize', paddingBottom: Hp(0.005)}]}>{abilityName} </Text>
-                                                            <View style={{flex: 1}}/>
-                                                            <View style={{flexDirection: 'row'}}>
-                                                                {fullStars.map(el => {
-                                                                    return <FastImage resizeMode={'contain'}
-                                                                                      style={styles.abilityStarImage} 
-                                                                                      source={require('../assets/icons/star-yellow-black-shape.png')}/>
-                                                                })}
-                                                                {emptyStars.map(el => {
-                                                                    return <FastImage resizeMode={'contain'}
-                                                                                      style={styles.abilityStarImage} 
-                                                                                      source={require('../assets/icons/star-empty-black.png')}/>
-                                                                })}
-                                                            </View>
-                                                    </View>
-                                                        <FlatList   //contentContainerStyle={{ padding: Wp(0.005), paddingVertical: Hp(0.01) }}
-                                                                    data={objectToArrayFilterMainRate(item[abilityName])}
-                                                                    numColumns={1}
-                                                                    keyExtractor={(item, index) => index}
-                                                                    renderItem={({item}) => {
-
-                                                                        const fullStars = Array.from(Array(Number(Object.values(Object.values(item))[0])).keys());
-                                                                        const emptyStars = Array.from(Array(5 - Number(Object.values(Object.values(item))[0])).keys());
-
-                                                                        return (
-                                                                            <View style={{flexDirection: 'row', paddingBottom: Hp(0.01)}}>
-                                                                                <View style={{flex: 1, paddingRight: Wp(0.05)}}>
-                                                                                    <Text style={[styles.featureTitleSmall, {textTransform: 'capitalize', paddingBottom: Hp(0.005)}]}>{Object.keys(item)}</Text>
-                                                                                </View>
-                                                                                <View style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center'}}>
-                                                                                    {fullStars.map(el => {
-                                                                                        return <FastImage resizeMode={'contain'}
-                                                                                                        style={styles.abilityStarImageSmall} 
-                                                                                                        source={require('../assets/icons/star-yellow-black-shape.png')}/>
-                                                                                    })}
-                                                                                    {emptyStars.map(el => {
-                                                                                        return <FastImage resizeMode={'contain'}
-                                                                                                        style={styles.abilityStarImageSmall} 
-                                                                                                        source={require('../assets/icons/star-empty-black.png')}/>
-                                                                                    })}
-                                                                                </View>
-                                                                            </View>
-                                                                        )
-                                                                    }}
-                                                        />
-                                                </View>
-                                            )
-                                            } else {
-                                                return (
-                                                    <TouchableOpacity onPress={()=> this.setState({featuresExpanded: !this.state.featuresExpanded})}
-                                                                      activeOpacity={0.8} 
-                                                                      style={{ flex: 1, justifyContent: 'center', alignItems: 'center', paddingTop: Hp(0.015), paddingBottom: Hp(0.005)}}>
-                                                        <Text style={[styles.featureTitle, { paddingTop: 0,color: this.props.theme.primaryColor}]}>View Less</Text>
-                                                    </TouchableOpacity>
-                                                )
-                                            }
-                                    }}
-                            />
-                     </View>
                 )
             }
         }
@@ -628,11 +538,8 @@ class BreedDetails extends Component {
     }
 
     renderContent(){
-        const { name } = this.props.breed;
-        const ambiguousNames = ["Afghan Hound", "Aidi", "Akita", "Armant", "Barbet", "Beagle", "Billy", "Bolognese", "Brittany", "Chinook",
-                                "Combai", "Docker", "Dunker", "Drever","Harrier", "Hokkaido", "Kanni", "Kintamani", "Maltese", "Newfoundland", 
-                                "Papillon", 'Phalène', "Poitevin", "Puli", "Pumi", "Shikoku", "Taigan", "Tosa"]
-        const socialTag = ambiguousNames.includes(name) ? name.replace(/\s/g, '') + 'dog' : name.replace(/\s/g, '');
+        const { socialMediaTag } = this.props.breed;
+
         return (
             <View style={styles.contentContainer}>
                 <LinearGradient start={{ x: 1, y: 0 }} end={{ x: 1, y: 1 }} colors={['#e4e2e4', '#FFF']}
@@ -654,11 +561,11 @@ class BreedDetails extends Component {
                     {this.renderFeaturesSection()}
                     {this.renderDescription()}
                     {this.renderCharacteristics()}
-                    {this.renderFederationsAndClubs()}
+                    {/* {this.renderFederationsAndClubs()} */}
                     {/* {this.renderWikipediaLink()} */}
-                    {this.renderFlickrSection(socialTag)}
+                    {this.renderFlickrSection(socialMediaTag)}
                     {/* {this.renderYoutubeSection(socialTag)} */}
-                    {this.renderInstagramSection(socialTag)}
+                    {this.renderInstagramSection(socialMediaTag)}
                </View>
             </View>
         )
@@ -697,33 +604,25 @@ class BreedDetails extends Component {
        
         if (true) {
             return (
-                <ScrollView contentContainerStyle={{ paddingTop: isIphoneX() ? 0 : 45}}
-                            bounces={false}
-                            >
-                    {this.renderCarousel()}
-                    <View style={{flex: 1, zIndex: 10000, marginTop: -Hp(0.055)}}>
-                        {this.renderContent()}
-                        {this.renderOptionsModal()}
-                    </View>
-                </ScrollView>
-            )
-        } else {
-            return (
-                <View style={styles.container}>
-                    {/* {this.renderHeader()} */}
-                    {this.renderCarousel()}
-                    <SlidingUpPanel
-                        showBackdrop={false}
-                        onBackButtonPress={()=> null}
-                        ref={c => (this._panel = c)}
-                        height={this.state.draggableRange.top}
-                        draggableRange={this.state.draggableRange}
-                        friction={100}
-                    >
-                        {this.renderContent()}
-                        {this.renderOptionsModal()}
-                    </SlidingUpPanel>
-                </View>
+                // <Swiper nestedScrollEnabled style={styles.wrapper} showsButtons={false}>
+                //     <ScrollView nestedScrollEnabled={true} contentContainerStyle={{ paddingTop: isIphoneX() ? 0 : 45 }}
+                //                 bounces={false}
+                //                 >
+                //         {this.renderCarousel()}
+                //         <View style={{flex: 1, zIndex: 10000, marginTop: -Hp(0.055)}}>
+                //             {this.renderContent()}
+                //             {this.renderOptionsModal()}
+                //         </View>
+                //     </ScrollView>
+                    <ScrollView contentContainerStyle={{ flexGrow: 1, paddingTop: isIphoneX() ? 0 : 45 }}
+                                bounces={false}
+                                >
+                        {this.renderCarousel()}
+                        <View style={{flex: 1, zIndex: 10000, marginTop: -Hp(0.055)}}>
+                            {this.renderContent()}
+                            {this.renderOptionsModal()}
+                        </View>
+                    </ScrollView>
             )
         }
     }
@@ -767,11 +666,13 @@ const styles = StyleSheet.create({
         // paddingTop: Wp(0.025)
     },
     originText: {
+        flex: 1,
         fontFamily: font.medium,
         fontSize: Hp(0.02),
         letterSpacing: 0.5,
         lineHeight: Hp(0.037),
-        color: '#9b9b9b'
+        color: '#9b9b9b',
+        textAlign: 'justify'
     },
     sectionTitleText: {
         fontFamily: font.bold,
@@ -801,8 +702,8 @@ const styles = StyleSheet.create({
     },
     featureTitleSmall: {
         marginRight: -Wp(0.005),
-        fontFamily: font.bold,
-        fontSize: Hp(0.021),
+        fontFamily: font.medium,
+        fontSize: Hp(0.02),
         letterSpacing: 0.5,
         paddingTop: Wp(0.005)
     },

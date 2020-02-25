@@ -38,6 +38,11 @@ export const bigPic = (pic) => {
   return pic.replace("100px", "500px").replace("150px", "500px").replace("200px", "500px").replace("220px", "500px").replace("250px", "500px")
 }
 
+export const mediumPic = (pic) => {
+  let newSize = "200px"
+  return pic.replace("100px", newSize).replace("150px", newSize).replace("200px", newSize).replace("220px", newSize).replace("200px", newSize)
+}
+
 // Sort array alphabetically by property  //
 export const dynamicSort = (property) => {
   var sortOrder = 1;
@@ -106,3 +111,8 @@ export const generateUniqueId = () => {
 export const objectToArray = (obj) => Object.keys(obj).map(el => { return { [el]: obj[el]} });
 
 export const objectToArrayFilterMainRate = (obj) => Object.keys(obj).map(el => { return { [el]: obj[el]} }).filter(el => Object.keys(el) != "mainRate");
+
+export const capitalizeString = (s) => {
+  if (typeof s !== 'string') return ''
+  return s.charAt(0).toUpperCase() + s.slice(1)
+}

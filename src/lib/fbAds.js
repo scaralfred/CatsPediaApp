@@ -4,7 +4,7 @@ import { BannerView, InterstitialAdManager } from 'react-native-fbads';
 import { isIos } from './util';
 import Config from 'react-native-config';
 
-const FBADS = true;
+const FBADS = false;
 
 export const FbAdsSmallBanner = () => {
     const [fbAdsSmallBannerActive, setFbAdsSmallBanner] = useState(true);

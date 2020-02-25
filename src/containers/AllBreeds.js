@@ -114,39 +114,9 @@ class AllBreeds extends Component {
         this._rowRenderer = this._rowRenderer.bind(this);
 
         //Since component should always render once data has changed, make data provider part of the state
-
-        ///  FILTERS ///
-        const { search, selectedMinHeight, selectedMaxHeight, selectedMinWeight, selectedMaxWeight, 
-                selectedBreedGroups, selectedClubs, sortBy
-            } = this.props;
         
-        let filteredBreeds = breeds.filter(el => {
-
-                                var fedAndClubs = () => {
-                                    var breedFedAndClubs = Object.keys(el.federationsAndClubs).filter( x => el.federationsAndClubs[x] != "")
-                                    var selectedClubsArray = selectedClubs.map( item => (item.charAt(0).toLowerCase() + item.slice(1)).replace(/\s/g,''))
-                                    return breedFedAndClubs.some(r=> selectedClubsArray.includes(r))
-                                }
-
-                                    return (el.name.replace('Š', 'S').toLowerCase().includes(search.toLowerCase()) 
-                                            || el.description.toLowerCase().includes(search.toLowerCase())
-                                            || el.origin.toLowerCase().includes(search.toLowerCase())
-                                            )
-                                            && (el.heightRange.min + el.heightRange.max)/2 >= selectedMinHeight
-                                            && (el.heightRange.min + el.heightRange.max)/2 <= selectedMaxHeight
-                                            && (el.weightRange.min + el.weightRange.max)/2 >= selectedMinWeight
-                                            && (el.weightRange.min + el.weightRange.max)/2 <= selectedMaxWeight
-                                            && (selectedBreedGroups.length > 0 ? selectedBreedGroups.includes(el.breedGroup) : true)
-                                            && (selectedClubs.length > 0 ? fedAndClubs() : true) 
-                            })
-
-        let sortedBreeds = sortBy == 'popularity' ? filteredBreeds.sort((a, b) => b.popularity - a.popularity) 
-                            : sortBy == 'size(S|B)' ? filteredBreeds.sort((a, b) => ((a.heightRange.min + a.heightRange.max)/2) - ((b.heightRange.min + b.heightRange.max)/2))
-                            : sortBy == 'size(B|S)' ? filteredBreeds.sort((a, b) => ((b.heightRange.min + b.heightRange.max)/2) - ((a.heightRange.min + a.heightRange.max)/2))
-                            : filteredBreeds;
-
         this.state = {
-            dataProvider: dataProvider.cloneWithRows(sortedBreeds)
+            dataProvider: dataProvider.cloneWithRows(breeds)
         };
         
     }
@@ -156,53 +126,9 @@ class AllBreeds extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        const { search, selectedMinHeight, selectedMaxHeight, selectedMinWeight, selectedMaxWeight, 
-            selectedBreedGroups, selectedClubs, sortBy, mainLayout
-        } = nextProps;
-        let dataProvider = new DataProvider((r1, r2) => {
-            return r1 !== r2;
-        });
-        let filteredBreeds = breeds.filter(el => {
+        const { mainLayout } = nextProps;
 
-            var fedAndClubs = () => {
-                var breedFedAndClubs = Object.keys(el.federationsAndClubs).filter( x => el.federationsAndClubs[x] != "")
-                var selectedClubsArray = selectedClubs.map( item => (item.charAt(0).toLowerCase() + item.slice(1)).replace(/\s/g,''))
-                return breedFedAndClubs.some(r=> selectedClubsArray.includes(r))
-            }
-
-                return (el.name.replace('Š', 'S').replace("-", " ").toLowerCase().includes(search.toLowerCase()) 
-                        || el.name.replace('Š', 'S').replace("-", " ").toLowerCase().includes(search.toLowerCase().replace(" ", ""))
-                        || el.name.replace('Š', 'S').replace("-", " ").replace(" ", "").toLowerCase().includes(search.toLowerCase()) 
-                        || el.description.toLowerCase().includes(search.toLowerCase())
-                        || el.origin.toLowerCase().includes(search.toLowerCase())
-                        )
-                        && (el.heightRange.min + el.heightRange.max)/2 >= selectedMinHeight
-                        && (el.heightRange.min + el.heightRange.max)/2 <= selectedMaxHeight
-                        && (el.weightRange.min + el.weightRange.max)/2 >= selectedMinWeight
-                        && (el.weightRange.min + el.weightRange.max)/2 <= selectedMaxWeight
-                        && (selectedBreedGroups.length > 0 ? selectedBreedGroups.includes(el.breedGroup) : true)
-                        && (selectedClubs.length > 0 ? fedAndClubs() : true) 
-        })
-
-        let sortedBreeds = sortBy == 'popularity' ? filteredBreeds.sort((a, b) => b.popularity - a.popularity) 
-                : sortBy == 'size(S|B)' ? filteredBreeds.sort((a, b) => ((a.heightRange.min + a.heightRange.max)/2) - ((b.heightRange.min + b.heightRange.max)/2))
-                : sortBy == 'size(B|S)' ? filteredBreeds.sort((a, b) => ((b.heightRange.min + b.heightRange.max)/2) - ((a.heightRange.min + a.heightRange.max)/2))
-                : filteredBreeds;
-        if (   this.props.search != search 
-            || this.props.selectedMinHeight != selectedMinHeight
-            || this.props.selectedMaxHeight != selectedMaxHeight
-            || this.props.selectedMinWeight != selectedMinWeight
-            || this.props.selectedMaxWeight != selectedMaxWeight
-            || this.props.selectedBreedGroups != selectedBreedGroups
-            || this.props.selectedClubs != selectedClubs
-            || this.props.sortBy != sortBy
-           ) {
-            
-            const exactSearchMatch = sortedBreeds.find( el => el.name.toLowerCase() == search.toLowerCase())
-            sortedBreeds = typeof exactSearchMatch !== 'undefined' && (sortBy == 'popularity' || sortBy == 'name')
-                           ? sortedBreeds.sort((a,b) => ( a == exactSearchMatch ? -1 : b == exactSearchMatch ? 1 : 0 )) : sortedBreeds;
-            this.setState({dataProvider: dataProvider.cloneWithRows(sortedBreeds)})
-        };
+        
         if (this.props.mainLayout != mainLayout) {
             this._layoutProvider = new LayoutProvider(
                 index => {

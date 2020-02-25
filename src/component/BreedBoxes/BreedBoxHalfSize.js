@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, Keyboard, ScrollView, ActivityIndicator } from 'react-native';
-import { Hp, Wp } from '../../lib/util';
+import { Hp, Wp, mediumPic } from '../../lib/util';
 import { font } from '../../styles/variables';
 import { Navigation } from 'react-native-navigation';
 import FastImage from 'react-native-fast-image';
@@ -36,7 +36,7 @@ class BreedBoxHalfSize extends Component {
         const { breed, isFavorite } = this.props;
         const { loadingPicture, finalPicture } = this.state;
         const placeholder = require('../../assets/images/placeholder.png');
-        const breedPicture = breed.pictures && breed.pictures.length > 0 ? {uri : breed.pictures[0]} : require('../../assets/images/dog-placeholder.png');
+        const breedPicture = breed.pictures && breed.pictures.length > 0 ? {uri : mediumPic(breed.pictures[0])} : require('../../assets/images/dog-placeholder.png');
 
         return (
             <TouchableOpacity activeOpacity={1}
