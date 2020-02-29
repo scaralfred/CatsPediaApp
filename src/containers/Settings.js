@@ -218,8 +218,8 @@ class Settings extends Component {
                 </View>
                 <ScrollView contentContainerStyle={styles.scrollViewFilters}
                             showsVerticalScrollIndicator={false}>
-                    {this.renderHeightMeasureUnit()}
-                    {this.renderWeightMeasureUnit()}
+                    {/* {this.renderHeightMeasureUnit()}
+                    {this.renderWeightMeasureUnit()} */}
                     {this.renderMainLayoutChoice()}
                     {this.renderFavoritesLayoutChoice()}
                     {this.renderShowFlickr()}

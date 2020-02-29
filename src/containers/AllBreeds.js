@@ -285,11 +285,7 @@ const mapStateToProps = state => ({
     heightUnitOfMeasure: state.global.settings.heightUnitOfMeasure,
     weightUnitOfMeasure: state.global.settings.weightUnitOfMeasure,
     selectedBreedGroups: state.global.filters.selectedBreedGroups,
-    selectedClubs: state.global.filters.selectedClubs,
-    selectedMinHeight: state.global.filters.heightRange[0],
-    selectedMaxHeight: state.global.filters.heightRange[1],
-    selectedMinWeight: state.global.filters.weightRange[0],
-    selectedMaxWeight: state.global.filters.weightRange[1],
+    selectedClubs: state.global.filters.selectedClubs
 });
 
 const mapDispatchToProps = dispatch => {

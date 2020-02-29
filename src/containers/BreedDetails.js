@@ -11,7 +11,6 @@ import Carousel from 'react-native-looped-carousel';
 import LinearGradient from 'react-native-linear-gradient';
 import { FloatingBackArrow } from '../component/UI/FloatingBackArrow';
 import InstaPics from '../component/InstaPics/InstaPics';
-import Collapsible from 'react-native-collapsible';
 import FlickrPics from '../component/FlickrPics/FlickrPics';
 import YoutubeVids from '../component/youtubeVids/YoutubeVids';
 import FastImage from 'react-native-fast-image';
@@ -38,7 +37,6 @@ class BreedDetails extends Component {
         },
         contentHeigth: null,
         featuresExpanded: false,
-        federationsAndClubsCollapsed: true,
         showDescription: false,
         loadingPicture: false,
         finalPicture: true,
@@ -55,6 +53,7 @@ class BreedDetails extends Component {
                 },
             }
         });
+        // alert(this.props.breed.associations)
     }
 
   
@@ -343,103 +342,55 @@ class BreedDetails extends Component {
         }
     }
 
-    renderFederationsAndClubs(){
-        const { federationsAndClubs } = this.props.breed;
-        const {federationsAndClubsCollapsed} = this.state;
+    renderAssociations(){
+        const { associations } = this.props.breed;
 
-        const FCI = federationsAndClubs && federationsAndClubs.federationCynologiqueInternationale.replace(/(\r\n|\n|\r)/gm, "") ? federationsAndClubs.federationCynologiqueInternationale : null;
-        const AKC = federationsAndClubs && federationsAndClubs.americanKennelClub ? federationsAndClubs.americanKennelClub.replace(/(\r\n|\n|\r)/gm, "") : null;
-        const ANKC = federationsAndClubs && federationsAndClubs.australianNationalKennelCouncil ? federationsAndClubs.australianNationalKennelCouncil.replace(/(\r\n|\n|\r)/gm, "") : null;
-        const CKC = federationsAndClubs && federationsAndClubs.canadianKennelClub ? federationsAndClubs.canadianKennelClub.replace(/(\r\n|\n|\r)/gm, "") : null;
-        const TKC = federationsAndClubs && federationsAndClubs.theKennelClub ? federationsAndClubs.theKennelClub.replace(/(\r\n|\n|\r)/gm, "") : null;
-        const NZKC = federationsAndClubs && federationsAndClubs.newZealandKennelClub ? federationsAndClubs.newZealandKennelClub.replace(/(\r\n|\n|\r)/gm, "") : null;
-        const UKC = federationsAndClubs && federationsAndClubs.unitedKennelClub ? federationsAndClubs.unitedKennelClub.replace(/(\r\n|\n|\r)/gm, "") : null;
-
-        const data = [
-            { name: 'Fédération Cynologique Internationale', 
-              content: FCI,
-              image: require('../assets/dogsClubs/FCI.png')
-            },
-            { name: 'American Kennel Club', 
-              content: AKC,
-              image: require('../assets/dogsClubs/AKC.png')
-            },
-            { name: 'Australian National Kennel Council', 
-              content: ANKC,
-              image: require('../assets/dogsClubs/ANKC.png')
-            },
-            { name: 'Canadian Kennel Club', 
-              content: CKC,
-              image: require('../assets/dogsClubs/CKC.png')
-            },
-            { name: 'The Kennel Club', 
-              content: TKC,
-              image: require('../assets/dogsClubs/TKC.png') 
-            },
-            { name: 'New Zealand Kennel Club', 
-              content: NZKC,
-              image: require('../assets/dogsClubs/NZKC.png')
-            },
-            { name: 'United Kennel Club', 
-              content: UKC,
-              image: require('../assets/dogsClubs/UKC.png') 
-            }
+        const allAssociations = [ 
+            {name: "CFA", image: require('../assets/dogsClubs/FCI.png')},
+            {name: "FIFe", image: require('../assets/dogsClubs/FCI.png')},
+            {name: "TICA", image: require('../assets/dogsClubs/FCI.png')},
+            {name: "WCF", image: require('../assets/dogsClubs/FCI.png')},
+            {name: "FFE", image: require('../assets/dogsClubs/FCI.png')},
+            {name: "AACE", image: require('../assets/dogsClubs/FCI.png')},
+            {name: "ACF", image: require('../assets/dogsClubs/FCI.png')},
+            {name: "CCA-AFC", image: require('../assets/dogsClubs/FCI.png')},
+            {name: "CCC of A", image: require('../assets/dogsClubs/FCI.png')},
+            {name: "CFF", image: require('../assets/dogsClubs/FCI.png')},
+            {name: "GCCF", image: require('../assets/dogsClubs/FCI.png')},
+            {name: "LOOF", image: require('../assets/dogsClubs/FCI.png')},
+            {name: "NZCF", image: require('../assets/dogsClubs/FCI.png')},
+            {name: "SACC", image: require('../assets/dogsClubs/FCI.png')}
         ]
+
+        // const data = allAssociations.filter(el => associations.some(el=> allAssociations.includes(el)))
         
-        if (FCI || AKC || ANKC || CKC || TKC || NZKC || UKC) {
+        if (true) {
         return ( 
             <View style={{ paddingVertical: Hp(0.01), paddingBottom: Hp(0.014) }}>
-                <TouchableOpacity activeOpacity={0.8} onPress={()=> this.setState({federationsAndClubsCollapsed: !federationsAndClubsCollapsed})} style={{flexDirection: 'row',  paddingVertical: Hp(0.01)}}>
+                <View style={{flexDirection: 'row',  paddingVertical: Hp(0.01)}}>
                     <Text style={[styles.sectionTitleText, {flex: 1}]}>Federations & Clubs</Text>
-                    <Text style={styles.viewMoreOrLess}>{federationsAndClubsCollapsed ? 'View More' : 'Show Less'}</Text>
-                </TouchableOpacity>
-                {federationsAndClubsCollapsed ?
-                <TouchableOpacity activeOpacity={1} 
-                                  disabled={!this.state.federationsAndClubsCollapsed} 
-                                  onPress={()=> this.setState({federationsAndClubsCollapsed: false})}>
-                    <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{flexDirection: 'row'}}>
-                        {data.map( item => {
-                            if (item.content) {
-                                return <View style={{marginRight: Wp(0.045)}}> 
+                </View>
+                <FlatList contentContainerStyle={{ padding: Wp(0.005), paddingTop: Hp(0.01), paddingBottom: 0  }}
+                            data={allAssociations}
+                            keyExtractor={(item, index) => index}
+                            numColumns={4}
+                            renderItem={({item}) => {
+                            if (true) {
+                                return (
+                                    <View style={styles.clubsRow}>
                                         <FastImage source={item.image}
-                                                   style={{ height: Hp(0.06), width: Hp(0.06)}} 
-                                                   resizeMode={'contain'}
-                                                   />
-                                    </View>
-                            }
-                        })}
-                    </ScrollView>
-                    <LinearGradient
-                            style={{position:'absolute', right:0, top: 0, bottom: 0, width: Wp(0.5), height: Hp(0.06)}}
-                            colors={[...Array.from(Array(10)).map( () => 'rgba(255, 255, 255, 0)'), 'rgba(255, 255, 255, 1)']}
-                            start={{x: 0, y: 0.75}} end={{x: 1, y: 0.25}} 
-                            // pointerEvents={'none'}
-                    />
-                </TouchableOpacity>
-                : 
-                <Collapsible collapsed={federationsAndClubsCollapsed}>
-                    <FlatList contentContainerStyle={{ padding: Wp(0.005), paddingTop: Hp(0.01), paddingBottom: 0  }}
-                              data={data}
-                              keyExtractor={(item, index) => index}
-                              renderItem={({item}) => {
-                                if (item.content) {
-                                    return (
-                                        <View style={styles.clubsRow}>
-                                            <FastImage source={item.image}
-                                                       style={styles.clubIcon} 
-                                                       resizeMode={'contain'}
-                                                       />
-                                            <View style={{paddingHorizontal: Wp(0.028)}}>
-                                                <Text style={styles.clubTitle}>{item.name}</Text>
-                                                <Text style={styles.clubText}>{item.content}</Text>
-                                            </View>
+                                                    style={styles.clubIcon} 
+                                                    resizeMode={'contain'}
+                                                    />
+                                        <View style={{paddingHorizontal: Wp(0.028)}}>
+                                            <Text style={styles.clubTitle}>{item.name}</Text>
+                                            {/* <Text style={styles.clubText}>{item.content}</Text> */}
                                         </View>
-                                    )
-                                }
-                              }}
-                        />
-                </Collapsible>
-                }
+                                    </View>
+                                )
+                            }
+                        }}
+                />
             </View>
         )
       }
@@ -561,7 +512,7 @@ class BreedDetails extends Component {
                     {this.renderFeaturesSection()}
                     {this.renderDescription()}
                     {this.renderCharacteristics()}
-                    {/* {this.renderFederationsAndClubs()} */}
+                    {this.renderAssociations()}
                     {/* {this.renderWikipediaLink()} */}
                     {this.renderFlickrSection(socialMediaTag)}
                     {/* {this.renderYoutubeSection(socialTag)} */}
@@ -812,7 +763,7 @@ const styles = StyleSheet.create({
     },
     clubsRow: {
         flex: 1, 
-        flexDirection: 'row',
+        // flexDirection: 'row',
         alignItems: 'center',
         paddingBottom: Hp(0.02)
     },

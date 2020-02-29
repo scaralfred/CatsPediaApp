@@ -12,6 +12,7 @@ import { CheckBox } from '../component/UI/CheckBox';
 import FastImage from 'react-native-fast-image';
 import FeaIcon from 'react-native-vector-icons/Feather';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
+import breeds from '../../scraper/breeds';
 
 class Filters extends Component {
 
@@ -27,11 +28,13 @@ class Filters extends Component {
 
     state = {
         scrollEnabled: true,
-        breedGroupsCollapsed: false,
-        selectedClubsCollapsed: false,
+        breedOriginCollapsed: false,
+        associationsCollapsed: false,
+        bodyTypeCollapsed: false,
+        coatLengthCollapsed: false,
+        selectedAssociationsCollapsed: false,
         initialFilters: null,
-        filters: null,
-        sortByCriteria: null
+        filters: null
     };
 
     componentDidMount() {
@@ -43,13 +46,16 @@ class Filters extends Component {
     }
 
     componentWillMount() {
-        const { filters, sortByCriteria } = this.props;
-        this.setState({filters, sortByCriteria});
+        const { filters } = this.props;
+        this.setState({filters});
+        // alert(breeds.map(el => el.origin))
+        // alert(this.props.selectedBreedOrigin)
+        // alert(breeds.map(el => el.bodyType))
+        // alert(breeds.map(el => el.coatLength))
     }
 
     applyFilters(){
         this.props.applyingFilters();
-        this.props.actions.sortByCriteria(this.state.sortByCriteria)
         this.props.actions.setFilters(this.state.filters);
         setTimeout(() => Navigation.dismissOverlay(this.props.componentId), 200);
     }
@@ -85,266 +91,51 @@ class Filters extends Component {
         )
     }
 
-    renderSortBy() {
-
-        const { sortByCriteria } = this.state;
-        const { primaryColor } = this.props.theme;
-
-        const CriteriaBlock = ({onPress, criteria, selected}) => (
-            <TouchableOpacity activeOpacity={0.9} 
-                              style={[styles.criteriaStyle, selected ? {borderColor: primaryColor, /*backgroundColor: '#000'*/ } : null]}
-                              onPress={onPress}>
-                <Text style={[styles.criteriaText, selected ? { fontFamily: font.medium, fontSize: Hp(0.023), color: primaryColor, marginTop: -Hp(0.005) } : null]}>{criteria}</Text>
-                <View style={[styles.criteriaUnderline, selected && {backgroundColor: primaryColor}]}/>
-            </TouchableOpacity>
-
-        )
-        
-        return (
-            <View style={[styles.settingOptionContainer, {paddingTop: Hp(0.002), paddingBottom: Hp(0.01), paddingRight: Hp(0.01)}]}>
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Text style={[styles.settingText, { marginRight: Wp(0.01)}]}>Sort by:</Text>
-                    <ScrollView contentContainerStyle={{paddingLeft: Wp(0.01), paddingRight: 0, alignItems: 'center', paddingTop: Hp(0.018)}}
-                                horizontal
-                                showsHorizontalScrollIndicator={false}
-                    >
-                        <CriteriaBlock criteria='Name' selected={sortByCriteria == 'name'} onPress={()=> this.setState({sortByCriteria: 'name'})}/>
-                        <CriteriaBlock criteria='Popularity' selected={sortByCriteria == 'popularity'} onPress={()=> this.setState({sortByCriteria: 'popularity'})}/>
-                        <CriteriaBlock criteria='Size (B to s)' selected={sortByCriteria == 'size(B|S)'} onPress={()=> this.setState({sortByCriteria: 'size(B|S)'})}/>
-                        <CriteriaBlock criteria='Size (s to B)' selected={sortByCriteria == 'size(S|B)'} onPress={()=> this.setState({sortByCriteria: 'size(S|B)'})}/>
-                    </ScrollView>
-                </View>
-            </View>
-        )
-    }
-
-    renderSizeFilter() {
-
-        const { minHeight, maxHeight, theme } = this.props;
-        const { primaryColor } = this.props.theme;
-        const { filters } = this.state;
-
-        // const sizeTargets = {
-        //     toy: [0,25],
-        //     small: [26,40],
-        //     medium: [41,60],
-        //     big: [61 - 150]
-        // }
-
-        const SizeBlock = ({onPress, size, selected}) => (
-            <TouchableOpacity activeOpacity={0.9} 
-                              style={[styles.filterBlock, selected ? {borderColor: primaryColor, backgroundColor: primaryColor } : null]}
-                              onPress={onPress}>
-                <Text style={[styles.filterBlockText, selected ? { color: '#fff' } : null]}>{size}</Text>
-            </TouchableOpacity>
-
-        )
-
-        let toySelected = filters.heightRange[0] <= 25 && filters.heightRange[1] > minHeight;
-        let smallSelected = filters.heightRange[0] <= 40 && filters.heightRange[1] >= 26;
-        let mediumSelected = filters.heightRange[0] <= 60 && filters.heightRange[1] >= 41;
-        let bigSelected = filters.heightRange[1] > 60 && filters.heightRange[0] < maxHeight;
-        let allSizesSelected = toySelected && smallSelected && mediumSelected && bigSelected;
-        
-        return (
-            <View style={[styles.settingOptionContainer, {paddingTop: Hp(0.02)}]}>
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Text style={[styles.settingText]}>Size:</Text>
-                    <ScrollView horizontal 
-                                showsHorizontalScrollIndicator={false}
-                                contentContainerStyle={{paddingHorizontal: Wp(0.04), marginTop: Hp(0.004)}}>
-                        <SizeBlock size='Toy' 
-                                   selected={toySelected}
-                                   onPress={()=> {
-                                        if (toySelected) {
-                                            allSizesSelected ? this.setState({filters: { ...filters, heightRange: [minHeight, 25]}}) :
-                                            smallSelected ? this.setState({filters: { ...filters, heightRange: [26, filters.heightRange[1]]}}) : 
-                                            this.setState({filters: { ...filters, heightRange: [minHeight, minHeight]}})
-                                        } else {
-                                            let rightPin = smallSelected ? filters.heightRange[1] : 25;
-                                            mediumSelected ? this.setState({filters: { ...filters, heightRange: [ minHeight, filters.heightRange[1]]}}) :
-                                            this.setState({filters: { ...filters, heightRange: [minHeight, rightPin]}})
-                                        }
-                                   }}/>
-                        <SizeBlock size='Small' 
-                                   selected={smallSelected}
-                                   onPress={()=> {
-                                        if (smallSelected) {
-                                            allSizesSelected ? this.setState({filters: { ...filters, heightRange: [26, 40]}}) :
-                                            mediumSelected && toySelected ? this.setState({filters: { ...filters, heightRange: [26, 40]}}) :
-                                            mediumSelected ? this.setState({filters: { ...filters, heightRange: [41, filters.heightRange[1]]}}) :
-                                            toySelected ? this.setState({filters: { ...filters, heightRange: [filters.heightRange[0], 25]}}) :
-                                            this.setState({filters: { ...filters, heightRange: [minHeight, minHeight]}})
-                                        } else {
-                                            bigSelected && !mediumSelected ? this.setState({filters: { ...filters, heightRange: [26, filters.heightRange[1]]}}) :
-                                            mediumSelected ? this.setState({filters: { ...filters, heightRange: [26, filters.heightRange[1]]}}) :
-                                            toySelected ? this.setState({filters: { ...filters, heightRange: [filters.heightRange[0], 40]}}) :
-                                            this.setState({filters: { ...filters, heightRange: [26, 40]}})
-                                        }
-                                   }}/>
-                        <SizeBlock size='Medium' 
-                                   selected={mediumSelected}
-                                   onPress={()=> {
-                                        if (mediumSelected) {
-                                            allSizesSelected ? this.setState({filters: { ...filters, heightRange: [41, 60]}}) :
-                                            bigSelected && smallSelected ? this.setState({filters: { ...filters, heightRange: [41, 60]}}) :
-                                            bigSelected ? this.setState({filters: { ...filters, heightRange: [61, filters.heightRange[1]]}}) :
-                                            smallSelected ? this.setState({filters: { ...filters, heightRange: [filters.heightRange[0], 40]}}) :
-                                            this.setState({filters: { ...filters, heightRange: [maxHeight, maxHeight]}})
-                                        } else {
-                                            toySelected && !smallSelected ? this.setState({filters: { ...filters, heightRange: [filters.heightRange[0], 60]}}) :
-                                            bigSelected ? this.setState({filters: { ...filters, heightRange: [41, filters.heightRange[1]]}}) :
-                                            smallSelected ? this.setState({filters: { ...filters, heightRange: [filters.heightRange[0], 60]}}) :
-                                            this.setState({filters: { ...filters, heightRange: [41, 60]}})
-                                        }
-                                   }}/>
-                        <SizeBlock size='Big' 
-                                   selected={bigSelected}
-                                   onPress={()=> {
-                                        if (bigSelected) {
-                                            allSizesSelected ? this.setState({filters: { ...filters, heightRange: [61, maxHeight]}}) :
-                                            mediumSelected ? this.setState({filters: { ...filters, heightRange: [filters.heightRange[0], 60]}}) :
-                                            this.setState({filters: { ...filters, heightRange: [maxHeight, maxHeight]}});
-                                        } else {
-                                            let leftPin = mediumSelected ? filters.heightRange[0] : 61;
-                                            smallSelected ? this.setState({filters: { ...filters, heightRange: [ filters.heightRange[0], maxHeight]}}) :
-                                            this.setState({filters: { ...filters, heightRange: [leftPin, maxHeight]}})
-                                        }
-                                        
-                                   }}/>
-                    </ScrollView>
-                </View>
-                <View style={{ alignItems: 'center'}}>
-                  
-                </View>
-            </View>
-        )
-    }
-
-    renderCustomSliderMarker = (value, unitOfMeasure) => {
-        const { primaryColor } = this.props.theme;
-        var convertedValue = unitOfMeasure == 'Lbs' ? KgToLbs(value) : unitOfMeasure == 'Ft/In' ? CmToFt(value) : value;
-        var unit = unitOfMeasure == 'Ft/In' ? '' : (' ' + unitOfMeasure)
-
-        return (
-          <View style={{ alignItems: 'center', width: Wp(0.2)}}>
-            <View style={[styles.customMarkerSlider, {borderColor: primaryColor}]} />
-            {/* <View>
-                <Text style={[styles.valuesText]}>{convertedValue}{unit}</Text>
-            </View> */}
-          </View>
-        )
-      };
-
-    renderHeightFilter() {
-        const { heightUnitOfMeasure } = this.props;
-        const { primaryColor } = this.props.theme;
-
-        var convertedValue = (value, unitOfMeasure) =>
-            unitOfMeasure == 'Lbs' ? KgToLbs(value) : unitOfMeasure == 'Ft/In' ? CmToFt(value) : value;
-        var convertedUnit = (unitOfMeasure) =>
-            unitOfMeasure == 'Ft/In' ? '' : (' ' + unitOfMeasure.toLowerCase())
-
-        return (
-            <View style={[styles.settingOptionContainer, { paddingBottom: Hp(0.006)}]}>
-                <View style={{flexDirection: 'row'}}>
-                    <Text style={[styles.settingText, {flex: 1}]}>Height:</Text>
-                    <Text style={[styles.valuesText]}>{convertedValue(this.state.filters.heightRange[0], heightUnitOfMeasure)}{convertedUnit(heightUnitOfMeasure)} - </Text>
-                    <Text style={[styles.valuesText]}>{convertedValue(this.state.filters.heightRange[1], heightUnitOfMeasure)}{convertedUnit(heightUnitOfMeasure)}</Text>
-                </View>
-                <View style={{ alignItems: 'center'}}>
-                    <MultiSlider isMarkersSeparated={true}
-                                 values={this.state.filters.heightRange}
-                                 min={this.props.initialMinHeight}
-                                 max={this.props.initialMaxHeight}
-                                 sliderLength={Wp(1) - Wp(0.3)}
-                                 customMarkerLeft={(e) => this.renderCustomSliderMarker(e.currentValue, heightUnitOfMeasure)}
-                                 customMarkerRight={(e) => this.renderCustomSliderMarker(e.currentValue, heightUnitOfMeasure)}
-                                 unselectedStyle={{ backgroundColor: '#bdbdbd', borderRadius: Hp(0.025) }}
-                                 selectedStyle={{ backgroundColor: primaryColor }}
-                                 touchDimensions={{ height: 100,  width: 100, borderRadius: 20, slipDisplacement: 400 }}
-                                 onValuesChange={(values) => this.setState({...this.state, filters: {...this.state.filters, heightRange: values}})}
-                                 />
-                </View>
-            </View>
-        )
-    }
-
-    renderWeightFilter() {
-
-        const { weightUnitOfMeasure } = this.props;
-        const { primaryColor } = this.props.theme;
-
-        var convertedValue = (value, unitOfMeasure) =>
-            unitOfMeasure == 'Lbs' ? KgToLbs(value) : unitOfMeasure == 'Ft/In' ? CmToFt(value) : value;
-        var convertedUnit = (unitOfMeasure) =>
-            unitOfMeasure == 'Ft/In' ? '' : (' ' + unitOfMeasure.toLowerCase())
-        
-        return (
-            <View style={[styles.settingOptionContainer, { paddingBottom: Hp(0.006)}]}>
-                <View style={{flexDirection: 'row'}}>
-                    <Text style={[styles.settingText, {flex: 1}]}>Weight:</Text>
-                    <Text style={[styles.valuesText]}>{convertedValue(this.state.filters.weightRange[0], weightUnitOfMeasure)}{convertedUnit(weightUnitOfMeasure)} - </Text>
-                    <Text style={[styles.valuesText]}>{convertedValue(this.state.filters.weightRange[1], weightUnitOfMeasure)}{convertedUnit(weightUnitOfMeasure)}</Text>
-                </View>
-                <View style={{ alignItems: 'center'}}>
-                    <MultiSlider isMarkersSeparated={true}
-                                 values={this.state.filters.weightRange}
-                                 min={this.props.initialMinWeight}
-                                 max={this.props.initialMaxWeight}
-                                 sliderLength={Wp(1) - Wp(0.3)}
-                                 customMarkerLeft={(e) => this.renderCustomSliderMarker(e.currentValue, weightUnitOfMeasure)}
-                                 customMarkerRight={(e) => this.renderCustomSliderMarker(e.currentValue, weightUnitOfMeasure)}
-                                 unselectedStyle={{ backgroundColor: '#bdbdbd', borderRadius: Hp(0.025) }}
-                                 selectedStyle={{ backgroundColor: primaryColor }}
-                                 touchDimensions={{ height: 100,  width: 100, borderRadius: 20, slipDisplacement: 400 }}
-                                 onValuesChange={(values) => this.setState({...this.state, filters: {...this.state.filters, weightRange: values}})}
-                                 />
-                </View>
-            </View>
-        )
-    }
+    
+    
 
     
-    renderLifeSpanFilter() {
-        
-        return (
-            <View style={styles.settingOptionContainer}>
-                <View style={{flexDirection: 'row'}}>
-                    <Text style={[styles.settingText, {flex: 1}]}>Life Span</Text>
-                </View>
-                <View style={{ alignItems: 'center'}}>
-                    <MultiSlider isMarkersSeparated={true}
-                                 values={this.state.filters.lifeSpan}
-                                 min={0}
-                                 max={20}
-                                 sliderLength={Wp(1) - Wp(0.3)}
-                                 customMarkerLeft={(e) => this.renderCustomSliderMarker(e.currentValue, 'lbs')}
-                                 customMarkerRight={(e) => this.renderCustomSliderMarker(e.currentValue, 'lbs')}
-                                 unselectedStyle={{ backgroundColor: '#bdbdbd' }}
-                                 selectedStyle={{ backgroundColor: '#000' }}
-                                 touchDimensions={{ height: 100,  width: 100, borderRadius: 20, slipDisplacement: 400 }}
-                                 onValuesChange={(values) => this.setState({...this.state, filters: {...this.state.filters, lifeSpan: values}})}
-                                 />
-                </View>
-            </View>
-        )
-    }
 
-    renderBreedGroupSelector() {
-        const { breedGroups } = this.props;
-        const {breedGroupsCollapsed, clubsCollapsed, filters} = this.state;
-        const {selectedBreedGroups} = filters;
+    
+    // renderLifeSpanFilter() {
+        
+    //     return (
+    //         <View style={styles.settingOptionContainer}>
+    //             <View style={{flexDirection: 'row'}}>
+    //                 <Text style={[styles.settingText, {flex: 1}]}>Life Span</Text>
+    //             </View>
+    //             <View style={{ alignItems: 'center'}}>
+    //                 <MultiSlider isMarkersSeparated={true}
+    //                              values={this.state.filters.lifeSpan}
+    //                              min={0}
+    //                              max={20}
+    //                              sliderLength={Wp(1) - Wp(0.3)}
+    //                              customMarkerLeft={(e) => this.renderCustomSliderMarker(e.currentValue, 'lbs')}
+    //                              customMarkerRight={(e) => this.renderCustomSliderMarker(e.currentValue, 'lbs')}
+    //                              unselectedStyle={{ backgroundColor: '#bdbdbd' }}
+    //                              selectedStyle={{ backgroundColor: '#000' }}
+    //                              touchDimensions={{ height: 100,  width: 100, borderRadius: 20, slipDisplacement: 400 }}
+    //                              onValuesChange={(values) => this.setState({...this.state, filters: {...this.state.filters, lifeSpan: values}})}
+    //                              />
+    //             </View>
+    //         </View>
+    //     )
+    // }
+
+    renderCoatLengthSelector() {
+        const { coatLength } = this.props;
+        const {coatLengthCollapsed, filters} = this.state;
+        const {selectedCoatLength} = filters;
         const { primaryColor } = this.props.theme;
 
-        const BreedGroupRow = ({name, checked}) => (
+        const CoatLengthRow = ({name, checked}) => (
             <TouchableOpacity onPress={()=> {
-                               !checked ? this.setState({...this.state, filters: {...this.state.filters, selectedBreedGroups: [...selectedBreedGroups, name]}}) 
-                               : this.setState({...this.state, filters: {...this.state.filters, selectedBreedGroups: selectedBreedGroups.filter(e => e !== name)}})
+                               !checked ? this.setState({...this.state, filters: {...this.state.filters, selectedCoatLength: [...selectedCoatLength, name]}}) 
+                               : this.setState({...this.state, filters: {...this.state.filters, selectedCoatLength: selectedCoatLength.filter(e => e !== name)}})
                               }}
                               activeOpacity={0.8} 
                               style={{flexDirection: 'row', alignItems: 'center', paddingVertical: Hp(0.018)}}>
-                <Text style={[styles.breedGroupsText, {flex: 1}]}>{name}</Text>
+                <Text style={[styles.breedOriginText, {flex: 1}]}>{name}</Text>
                 <CheckBox color={primaryColor} checked={checked}/>
             </TouchableOpacity>
         )
@@ -353,40 +144,120 @@ class Filters extends Component {
             <View style={[styles.settingOptionContainer, {paddingBottom: Hp(0.015),}]}>
                 <TouchableOpacity activeOpacity={1} 
                                   onPress={()=> {
-                                      setTimeout(() => {
-                                        !breedGroupsCollapsed && !clubsCollapsed ? this.scrollViewFilters.scrollTo({ y: 1000, animated: true }) : null;
-                                      }, 500);
-                                      this.setState({breedGroupsCollapsed: !breedGroupsCollapsed});
+                                    //   setTimeout(() => {
+                                    //     !breedOriginCollapsed && !associationsCollapsed ? this.scrollViewFilters.scrollTo({ y: 1000, animated: true }) : null;
+                                    //   }, 500);
+                                      this.setState({coatLengthCollapsed: !coatLengthCollapsed});
                                   }} 
                                   style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Text style={[styles.settingText, {flex: 1, color: selectedBreedGroups.length > 0 ? primaryColor : null}]}>Breed Groups</Text>
-                    <FeaIcon name={`chevron-${!breedGroupsCollapsed ? 'down' : 'up'}`} style={{marginRight: -Hp(0.01)}} size={Hp(0.05)} color={selectedBreedGroups.length > 0 ? primaryColor : '#000'} />
+                    <Text style={[styles.settingText, {flex: 1, color: selectedCoatLength.length > 0 ? primaryColor : null}]}>Coat Length</Text>
+                    <FeaIcon name={`chevron-${!coatLengthCollapsed ? 'down' : 'up'}`} style={{marginRight: -Hp(0.01)}} size={Hp(0.05)} color={selectedCoatLength.length > 0 ? primaryColor : '#000'} />
                 </TouchableOpacity>
-                <Collapsible collapsed={!breedGroupsCollapsed}>
+                <Collapsible collapsed={!coatLengthCollapsed}>
                     <View style={{ alignItems: 'center', paddingHorizontal: Hp(0.003), paddingTop: Hp(0.008)}}>
-                        {breedGroups.map(el => <BreedGroupRow name={el} checked={selectedBreedGroups.includes(el)}/>)}
+                        {coatLength.map(el => <CoatLengthRow name={el} checked={selectedCoatLength.includes(el)}/>)}
                     </View>
                 </Collapsible>
             </View>
         )
     }
 
-    renderClubsSelector() {
-        const {clubsCollapsed, filters} = this.state;
-        const {selectedClubs} = filters;
+    renderBodyTypeSelector() {
+        const { bodyType } = this.props;
+        const {bodyTypeCollapsed, filters} = this.state;
+        const {selectedBodyType} = filters;
         const { primaryColor } = this.props.theme;
 
-        const clubs = [ 'Federation Cynologique Internationale', 'American Kennel Club', 'Australian National Kennel Council',
-                        'Canadian Kennel Club', 'The Kennel Club', 'New Zealand Kennel Club', 'UnitedKennelClub']
-
-        const ClubRow = ({name, checked}) => (
+        const BodyTypeRow = ({name, checked}) => (
             <TouchableOpacity onPress={()=> {
-                               !checked ? this.setState({...this.state, filters: {...this.state.filters, selectedClubs: [...selectedClubs, name]}}) 
-                               : this.setState({...this.state, filters: {...this.state.filters, selectedClubs: selectedClubs.filter(e => e !== name)}})
+                               !checked ? this.setState({...this.state, filters: {...this.state.filters, selectedBodyType: [...selectedBodyType, name]}}) 
+                               : this.setState({...this.state, filters: {...this.state.filters, selectedBodyType: selectedBodyType.filter(e => e !== name)}})
                               }}
                               activeOpacity={0.8} 
                               style={{flexDirection: 'row', alignItems: 'center', paddingVertical: Hp(0.018)}}>
-                <Text style={[styles.breedGroupsText, {flex: 1}]}>{name}</Text>
+                <Text style={[styles.breedOriginText, {flex: 1}]}>{name}</Text>
+                <CheckBox color={primaryColor} checked={checked}/>
+            </TouchableOpacity>
+        )
+        
+        return (
+            <View style={[styles.settingOptionContainer, {paddingBottom: Hp(0.015),}]}>
+                <TouchableOpacity activeOpacity={1} 
+                                  onPress={()=> {
+                                    //   setTimeout(() => {
+                                    //     !breedOriginCollapsed && !associationsCollapsed ? this.scrollViewFilters.scrollTo({ y: 1000, animated: true }) : null;
+                                    //   }, 500);
+                                      this.setState({bodyTypeCollapsed: !bodyTypeCollapsed});
+                                  }} 
+                                  style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <Text style={[styles.settingText, {flex: 1, color: selectedBodyType.length > 0 ? primaryColor : null}]}>Body Type</Text>
+                    <FeaIcon name={`chevron-${!bodyTypeCollapsed ? 'down' : 'up'}`} style={{marginRight: -Hp(0.01)}} size={Hp(0.05)} color={selectedBodyType.length > 0 ? primaryColor : '#000'} />
+                </TouchableOpacity>
+                <Collapsible collapsed={!bodyTypeCollapsed}>
+                    <View style={{ alignItems: 'center', paddingHorizontal: Hp(0.003), paddingTop: Hp(0.008)}}>
+                        {bodyType.map(el => <BodyTypeRow name={el} checked={selectedBodyType.includes(el)}/>)}
+                    </View>
+                </Collapsible>
+            </View>
+        )
+    }
+
+    renderBreedOriginSelector() {
+        const { breedOrigin } = this.props;
+        const {breedOriginCollapsed, associationsCollapsed, filters} = this.state;
+        const {selectedBreedOrigin} = filters;
+        const { primaryColor } = this.props.theme;
+
+        const BreedGroupRow = ({name, checked}) => (
+            <TouchableOpacity onPress={()=> {
+                               !checked ? this.setState({...this.state, filters: {...this.state.filters, selectedBreedOrigin: [...selectedBreedOrigin, name]}}) 
+                               : this.setState({...this.state, filters: {...this.state.filters, selectedBreedOrigin: selectedBreedOrigin.filter(e => e !== name)}})
+                              }}
+                              activeOpacity={0.8} 
+                              style={{flexDirection: 'row', alignItems: 'center', paddingVertical: Hp(0.018)}}>
+                <Text style={[styles.breedOriginText, {flex: 1}]}>{name}</Text>
+                <CheckBox color={primaryColor} checked={checked}/>
+            </TouchableOpacity>
+        )
+        
+        return (
+            <View style={[styles.settingOptionContainer, {paddingBottom: Hp(0.015),}]}>
+                <TouchableOpacity activeOpacity={1} 
+                                  onPress={()=> {
+                                    //   setTimeout(() => {
+                                    //     !breedOriginCollapsed && !associationsCollapsed ? this.scrollViewFilters.scrollTo({ y: 1000, animated: true }) : null;
+                                    //   }, 500);
+                                      this.setState({breedOriginCollapsed: !breedOriginCollapsed});
+                                  }} 
+                                  style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <Text style={[styles.settingText, {flex: 1, color: selectedBreedOrigin.length > 0 ? primaryColor : null}]}>Breed Origin</Text>
+                    <FeaIcon name={`chevron-${!breedOriginCollapsed ? 'down' : 'up'}`} style={{marginRight: -Hp(0.01)}} size={Hp(0.05)} color={selectedBreedOrigin.length > 0 ? primaryColor : '#000'} />
+                </TouchableOpacity>
+                <Collapsible collapsed={!breedOriginCollapsed}>
+                    <View style={{ alignItems: 'center', paddingHorizontal: Hp(0.003), paddingTop: Hp(0.008)}}>
+                        {breedOrigin.map(el => <BreedGroupRow name={el} checked={selectedBreedOrigin.includes(el)}/>)}
+                    </View>
+                </Collapsible>
+            </View>
+        )
+    }
+
+    renderAssociations() {
+        const {associationsCollapsed, filters} = this.state;
+        const {selectedAssociations} = filters;
+        const { primaryColor } = this.props.theme;
+
+        const associations = [ "CFA", "FIFe", "TICA", "WCF", "FFE", "AACE", "ACF", "CCA-AFC", 
+                                "CCC of A", "CFF", "GCCF", "LOOF", "NZCF", "SACC" ]
+
+        const AssociationRow = ({name, checked}) => (
+            <TouchableOpacity onPress={()=> {
+                               !checked ? this.setState({...this.state, filters: {...this.state.filters, selectedAssociations: [...selectedAssociations, name]}}) 
+                               : this.setState({...this.state, filters: {...this.state.filters, selectedAssociations: selectedAssociations.filter(e => e !== name)}})
+                              }}
+                              activeOpacity={0.8} 
+                              style={{flexDirection: 'row', alignItems: 'center', paddingVertical: Hp(0.018)}}>
+                <Text style={[styles.breedOriginText, {flex: 1}]}>{name}</Text>
                 <CheckBox color={primaryColor} checked={checked}/>
             </TouchableOpacity>
         )
@@ -395,18 +266,18 @@ class Filters extends Component {
             <View style={[styles.settingOptionContainer, {paddingBottom: Hp(0.015),}]}>
                 <TouchableOpacity activeOpacity={1}  
                                   onPress={()=> {
-                                    setTimeout(() => {
-                                      !clubsCollapsed ? this.scrollViewFilters.scrollTo({ y: 1500, animated: true }) : null;
-                                    }, 500);
-                                    this.setState({clubsCollapsed: !clubsCollapsed});
+                                    // setTimeout(() => {
+                                    //   !associationsCollapsed ? this.scrollViewFilters.scrollTo({ y: 1500, animated: true }) : null;
+                                    // }, 500);
+                                    this.setState({associationsCollapsed: !associationsCollapsed});
                                   }} 
                                   style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Text style={[styles.settingText, {flex: 1, color: selectedClubs.length > 0 ? primaryColor : null}]}>Federations & Clubs</Text>
-                    <FeaIcon name={`chevron-${!clubsCollapsed ? 'down' : 'up'}`} style={{marginRight: -Hp(0.01)}} size={Hp(0.05)} color={selectedClubs.length > 0 ? primaryColor : '#000'} />
+                    <Text style={[styles.settingText, {flex: 1, color: selectedAssociations.length > 0 ? primaryColor : null}]}>Federations & Clubs</Text>
+                    <FeaIcon name={`chevron-${!associationsCollapsed ? 'down' : 'up'}`} style={{marginRight: -Hp(0.01)}} size={Hp(0.05)} color={selectedAssociations.length > 0 ? primaryColor : '#000'} />
                 </TouchableOpacity>
-                <Collapsible collapsed={!clubsCollapsed}>
+                <Collapsible collapsed={!associationsCollapsed}>
                     <View style={{ alignItems: 'center', paddingHorizontal: Hp(0.003), paddingTop: Hp(0.008)}}>
-                        {clubs.map(el => <ClubRow name={el} checked={selectedClubs.includes(el)}/>)}
+                        {associations.map(el => <AssociationRow name={el} checked={selectedAssociations.includes(el)}/>)}
                     </View>
                 </Collapsible>
             </View>
@@ -435,13 +306,11 @@ class Filters extends Component {
                             ref={c => (this.scrollViewFilters = c)}
                             scrollEnabled={this.state.scrollEnabled}
                             >
-                    {this.renderSortBy()}
-                    {this.renderSizeFilter()}
-                    {this.renderHeightFilter()}
-                    {this.renderWeightFilter()}
                     {/* {this.renderLifeSpanFilter()} */}
-                    {this.renderBreedGroupSelector()}
-                    {this.renderClubsSelector()}
+                    {this.renderBodyTypeSelector()}
+                    {this.renderCoatLengthSelector()}
+                    {this.renderBreedOriginSelector()}
+                    {this.renderAssociations()}
                 </ScrollView>
                 {this.renderApplyButton()}
             </View>
@@ -552,7 +421,7 @@ const styles = StyleSheet.create({
         borderColor: '#000',
         borderWidth: Hp(0.0035)
       },
-      breedGroupsText: {
+      breedOriginText: {
           fontFamily: font.regular,
           fontSize: Hp(0.023),
           lineHeight: Hp(0.026)
@@ -600,25 +469,18 @@ const styles = StyleSheet.create({
 
 
 const mapStateToProps = state => ({
-    sortByCriteria: state.global.sortBy,
     theme: state.global.theme,
     filters: state.global.filters,
     initialFilters: state.global.initialFilters,
     minLife: state.global.filters.lifeSpan[0],
     maxLife: state.global.filters.lifeSpan[1],
-    breedGroups: state.global.breedGroups,
-    selectedBreedGroups: state.global.filters.selectedBreedGroups,
-    selectedClubs: state.global.filters.selectedClubs,
-    minHeight: state.global.filters.heightRange[0],
-    maxHeight: state.global.filters.heightRange[1],
-    minWeight: state.global.filters.weightRange[0],
-    maxWeight: state.global.filters.weightRange[1],
-    initialMinHeight: state.global.initialFilters.heightRange[0],
-    initialMaxHeight: state.global.initialFilters.heightRange[1],
-    initialMinWeight: state.global.initialFilters.weightRange[0],
-    initialMaxWeight: state.global.initialFilters.weightRange[1],
-    heightUnitOfMeasure: state.global.settings.heightUnitOfMeasure,
-    weightUnitOfMeasure: state.global.settings.weightUnitOfMeasure
+    breedOrigin: state.global.breedOrigin,
+    selectedBreedOrigin: state.global.filters.selectedBreedOrigin,
+    coatLength: state.global.coatLength,
+    selectedCoatLength: state.global.filters.selectedCoatLength,
+    bodyType: state.global.bodyType,
+    selectedBodyType: state.global.filters.selectedBodyType,
+    selectedAssociations: state.global.filters.selectedAssociations
 });
 
 const mapDispatchToProps = dispatch => {

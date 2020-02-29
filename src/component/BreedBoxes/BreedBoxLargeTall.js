@@ -88,7 +88,7 @@ class BreedBoxLargeTall extends Component {
                             <View style={{ flexDirection: 'row', flex: 1,  }}>
                                     <View style={{flex: 1}}>
                                         <Text numberOfLines={1} style={[styles.nameText, { paddingRight: Wp(0.05), flex: 1}]}>{breed.name}</Text>
-                                        <Text style={[ styles.descriptionText, {paddingBottom: Hp(0.002)}]}>{breed.breedGroup}</Text>
+                                        <Text numberOfLines={1} style={[ styles.descriptionText, {paddingBottom: Hp(0.002)}]}>{`${breed.bodyType} body type, ${breed.coatLength.toLowerCase()} coat length`}</Text>
                                     </View>
                                     <View style={{}}>
                                         <Text numberOfLines={2} style={[styles.featureText, {maxWidth: Wp(0.2), textAlign: 'right'}]}>{breed.origin}</Text>
@@ -98,21 +98,21 @@ class BreedBoxLargeTall extends Component {
                         <View style={{flex: 1, borderTopWidth: Hp(0.0015), paddingVertical: Hp(0.008), borderTopColor: 'rgba(223, 223, 223, 1)', }}>
                             <View style={{ flexDirection: 'row', flex:1, paddingHorizontal: Wp(0.005) }}>
                                 <View style={{flex: 1}}>
-                                    <View style={{flex: 1, flexDirection: 'row', alignItems: 'center' }}>
+                                    <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', maxWidth: Wp(0.45) }}>
                                                 <FastImage resizeMode={'contain'} source={require('../../assets/icons/origin-3.png')}
                                                         style={[styles.featureIcon, {height: Hp(0.021), width:  Hp(0.021)}]} />
-                                                <View style={{}}>
+                                                <View style={{maxWidth: Wp(0.4)}}>
                                                     <Text numberOfLines={1} style={[styles.featureText, {paddingTop: Hp(0.006)}]}>{breedCountry}</Text>
                                                 </View>
                                     </View>
                                 </View>
-                                <View style={{flexDirection: 'row'}}>
+                                <View style={{flexDirection: 'row', maxWidth: Wp(0.45)}}>
                                     <View style={{flexDirection: 'row', alignItems: 'center' }}>
                                                 <FastImage source={require('../../assets/icons/pattern.png')}
                                                         style={[styles.featureIcon]} 
                                                         resizeMode={'contain'}
                                                         />
-                                                <View style={{marginTop: Hp(0.005) }}>
+                                                <View style={{marginTop: Hp(0.005), maxWidth: Wp(0.4) }}>
                                                     <Text numberOfLines={1} style={[styles.featureText]}>{breed.pattern}</Text>
                                                 </View>
                                     </View>

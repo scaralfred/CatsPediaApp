@@ -24,12 +24,7 @@ import { themes } from '../../styles/themes';
 
 // INITIAL FILTERS //
 import breeds from '../../../scraper/breeds';
-import { isIos } from '../../lib/util';
 
-const minHeight = Math.min(...breeds.map(el => el.heightRange && el.heightRange.min ? el.heightRange.min : null ));
-const maxHeight = Math.max(...breeds.map(el => el.heightRange && el.heightRange.max ? el.heightRange.max : null));
-const minWeight = Math.min(...breeds.map(el => el.weightRange && el.weightRange.min ? el.weightRange.min : null));
-const maxWeight = Math.max(...breeds.map(el => el.weightRange && el.weightRange.max ? el.weightRange.max : null));
 
 // Settings Reducer
 const initialState = {
@@ -39,21 +34,23 @@ const initialState = {
     theme: themes['white'],
     search: '',
     favorites: [],
-    breedGroups: [...new Set(breeds.map(el => el.breedGroup))],
+    breedOrigin: [...new Set(breeds.map(el => el.origin).filter(elem => elem != "" && elem != null))],
+    bodyType: [...new Set(breeds.map(el => el.bodyType).filter(elem => elem != "" && elem != null))],
+    coatLength: [...new Set(breeds.map(el => el.coatLength).filter(elem => elem != "" && elem != null))],
     sortBy: 'name',
     filters: { 
-        heightRange: [minHeight, maxHeight],
-        weightRange: [minWeight, maxWeight],
         lifeSpan: [1, 20],
-        selectedBreedGroups: [],
-        selectedClubs: []
+        selectedCoatLength: [],
+        selectedBodyType: [],
+        selectedBreedOrigin: [],
+        selectedAssociations: []
     },
     initialFilters: { 
-        heightRange: [minHeight, maxHeight],
-        weightRange: [minWeight, maxWeight],
         lifeSpan: [1, 20],
-        selectedBreedGroups: [], 
-        selectedClubs: []
+        selectedCoatLength: [],
+        selectedBodyType: [],
+        selectedBreedOrigin: [], 
+        selectedAssociations: []
     },
     settings: {
         heightUnitOfMeasure: 'Cm',
@@ -93,7 +90,7 @@ export default globalReducer = (state = initialState, action) => {
         
         // FILTERS //
         case SET_INITIAL_FILTERS:
-        return { ...state, initialFilters: { ...state.initialFilters, heightRange: [minHeight,maxHeight], weightRange: [minWeight,maxWeight]} };
+        return { ...state, initialFilters: { ...state.initialFilters } };
 
         case SET_FILTERS:
         return { ...state, filters: action.payload };

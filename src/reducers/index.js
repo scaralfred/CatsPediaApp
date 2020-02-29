@@ -3,7 +3,7 @@ import { persistCombineReducers } from 'redux-persist';
 import thunk from 'redux-thunk'
 import { AsyncStorage } from 'react-native';
 
-const config = { key: 'root', storage: AsyncStorage, blacklist: [] }
+const config = { key: 'root', storage: AsyncStorage, blacklist: ["global"] }
 
 
 import global from './global/globalReducer';
