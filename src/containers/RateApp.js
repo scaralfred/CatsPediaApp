@@ -18,6 +18,7 @@ import Config from 'react-native-config';
 import Rate, { AndroidMarket } from 'react-native-rate';
 import StarRating from 'react-native-star-rating';
 import { font } from '../styles/variables';
+import { themes } from '../styles/themes';
 
 const { width, height } = Dimensions.get('window');
 
@@ -113,7 +114,7 @@ class RateApp extends Component {
                     }}
                     >
                         <View style={{ flex: 1, paddingVertical: 10, borderLeftColor: '#E8E8E8', borderLeftWidth: 1, alignItems: 'center', justifyContent: 'center' }}>
-                            <Text style={[styles.boxText, { color: '#002278' }]}>{"Submit"}</Text>
+                            <Text style={[styles.boxText, { color: themes.white.primaryColor }]}>{"Submit"}</Text>
                         </View>
                     </TouchableWithoutFeedback>
                 </View>
