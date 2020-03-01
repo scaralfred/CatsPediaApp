@@ -31,7 +31,7 @@ sendImageToServer = (dispatch, image, componentId) => {
             
             axios({
                 method: 'post',
-                url: `${URL}/uploader`,
+                url: `${URL}/uploadercats`,
                 data:  formData,
                 headers: {
                     // 'Accept': 'application/json',

@@ -17,6 +17,7 @@ import FastImage from 'react-native-fast-image';
 import { sizeCalculator } from '../lib/dogSize';
 import Modal from 'react-native-modal';
 import FeaIcon from 'react-native-vector-icons/Feather';
+import { FbAdsSmallBanner } from '../lib/fbAds';
 
 class BreedDetails extends Component {
 
@@ -346,54 +347,50 @@ class BreedDetails extends Component {
         const { associations } = this.props.breed;
 
         const allAssociations = [ 
-            {name: "CFA", image: require('../assets/dogsClubs/FCI.png')},
-            {name: "FIFe", image: require('../assets/dogsClubs/FCI.png')},
-            {name: "TICA", image: require('../assets/dogsClubs/FCI.png')},
-            {name: "WCF", image: require('../assets/dogsClubs/FCI.png')},
-            {name: "FFE", image: require('../assets/dogsClubs/FCI.png')},
-            {name: "AACE", image: require('../assets/dogsClubs/FCI.png')},
-            {name: "ACF", image: require('../assets/dogsClubs/FCI.png')},
-            {name: "CCA-AFC", image: require('../assets/dogsClubs/FCI.png')},
-            {name: "CCC of A", image: require('../assets/dogsClubs/FCI.png')},
-            {name: "CFF", image: require('../assets/dogsClubs/FCI.png')},
-            {name: "GCCF", image: require('../assets/dogsClubs/FCI.png')},
-            {name: "LOOF", image: require('../assets/dogsClubs/FCI.png')},
-            {name: "NZCF", image: require('../assets/dogsClubs/FCI.png')},
-            {name: "SACC", image: require('../assets/dogsClubs/FCI.png')}
+            {name: "CFA", image: require('../assets/catsClubs/CFA.png')},
+            {name: "FIFe", image: require('../assets/catsClubs/FIFe.png')},
+            {name: "TICA", image: require('../assets/catsClubs/TICA.png')},
+            {name: "WCF", image: require('../assets/catsClubs/WCF.png')},
+            {name: "FFE", image: require('../assets/catsClubs/NO-LOGO.png')},
+            {name: "AACE", image: require('../assets/catsClubs/NO-LOGO.png')},
+            {name: "ACF", image:require('../assets/catsClubs/ACF.png')},
+            {name: "CCA-AFC", image: require('../assets/catsClubs/CCA-AFC.png')},
+            {name: "CCC of A", image: require('../assets/catsClubs/CCC-of-A.png')},
+            {name: "CFF", image: require('../assets/catsClubs/CFF.png')},
+            {name: "GCCF", image: require('../assets/catsClubs/GCCF.png')},
+            {name: "LOOF", image: require('../assets/catsClubs/LOOF.png')},
+            {name: "NZCF", image: require('../assets/catsClubs/NZCF.png')},
+            {name: "SACC", image: require('../assets/catsClubs/SACC.png')}
         ]
 
-        // const data = allAssociations.filter(el => associations.some(el=> allAssociations.includes(el)))
-        
-        if (true) {
-        return ( 
-            <View style={{ paddingVertical: Hp(0.01), paddingBottom: Hp(0.014) }}>
-                <View style={{flexDirection: 'row',  paddingVertical: Hp(0.01)}}>
-                    <Text style={[styles.sectionTitleText, {flex: 1}]}>Federations & Clubs</Text>
-                </View>
-                <FlatList contentContainerStyle={{ padding: Wp(0.005), paddingTop: Hp(0.01), paddingBottom: 0  }}
-                            data={allAssociations}
+        if (associations) {
+            return ( 
+                <View style={{ paddingVertical: Hp(0.01), paddingBottom: Hp(0.014) }}>
+                    <View style={{flexDirection: 'row',  paddingVertical: Hp(0.01)}}>
+                        <Text style={[styles.sectionTitleText, {flex: 1}]}>Federations & Clubs</Text>
+                    </View>
+                    <FlatList contentContainerStyle={{ padding: Wp(0.005), paddingTop: Hp(0.02), paddingBottom: 0  }}
+                            data={associations}
                             keyExtractor={(item, index) => index}
                             numColumns={4}
                             renderItem={({item}) => {
-                            if (true) {
-                                return (
-                                    <View style={styles.clubsRow}>
-                                        <FastImage source={item.image}
-                                                    style={styles.clubIcon} 
-                                                    resizeMode={'contain'}
-                                                    />
-                                        <View style={{paddingHorizontal: Wp(0.028)}}>
-                                            <Text style={styles.clubTitle}>{item.name}</Text>
-                                            {/* <Text style={styles.clubText}>{item.content}</Text> */}
+                                let associationIcon = allAssociations.find(el => el.name == item).image
+                                    return (
+                                        <View style={styles.clubsRow}>
+                                            <FastImage source={associationIcon}
+                                                       style={styles.clubIcon} 
+                                                       resizeMode={'contain'}
+                                                        />
+                                            <View style={{paddingHorizontal: Wp(0.0)}}>
+                                                <Text style={styles.clubTitle}>{item}</Text>
+                                            </View>
                                         </View>
-                                    </View>
-                                )
-                            }
-                        }}
-                />
-            </View>
-        )
-      }
+                                    )
+                            }}
+                    />
+                </View>
+            )
+        }
     }
 
     renderWikipediaLink(layout){
@@ -513,7 +510,7 @@ class BreedDetails extends Component {
                     {this.renderDescription()}
                     {this.renderCharacteristics()}
                     {this.renderAssociations()}
-                    {/* {this.renderWikipediaLink()} */}
+                    {this.renderWikipediaLink()}
                     {this.renderFlickrSection(socialMediaTag)}
                     {/* {this.renderYoutubeSection(socialTag)} */}
                     {this.renderInstagramSection(socialMediaTag)}
@@ -565,6 +562,7 @@ class BreedDetails extends Component {
                 //             {this.renderOptionsModal()}
                 //         </View>
                 //     </ScrollView>
+                <View>
                     <ScrollView contentContainerStyle={{ flexGrow: 1, paddingTop: isIphoneX() ? 0 : 45 }}
                                 bounces={false}
                                 >
@@ -574,6 +572,10 @@ class BreedDetails extends Component {
                             {this.renderOptionsModal()}
                         </View>
                     </ScrollView>
+                    <View style={{position: 'absolute', bottom: 0,  width: '100%', backgroundColor: 'white', paddingBottom: isIphoneX() ? 20 : null}}>
+                        <FbAdsSmallBanner />
+                    </View>
+                </View>
             )
         }
     }
@@ -601,7 +603,8 @@ const styles = StyleSheet.create({
         borderRadius: Wp(0.008),
         marginHorizontal: Wp(0.04),
         paddingTop: Hp(0.012),
-        padding: Hp(0.018)
+        padding: Hp(0.018),
+        paddingBottom: Hp(0.04)
     },
     nameText: {
         fontFamily: font.bold,
@@ -676,7 +679,8 @@ const styles = StyleSheet.create({
     },
     clubTitle: {
         fontFamily: font.bold,
-        fontSize: Hp(0.02),
+        fontSize: Hp(0.017),
+        lineHeight: Hp(0.035),
         letterSpacing: 0.5
     },
     clubText: {
@@ -762,10 +766,11 @@ const styles = StyleSheet.create({
         marginTop: Hp(0.02)
     },
     clubsRow: {
-        flex: 1, 
+        // flex: 1, 
         // flexDirection: 'row',
-        alignItems: 'center',
-        paddingBottom: Hp(0.02)
+        // alignItems: 'center',
+        paddingBottom: Hp(0.02),
+        width: Wp(0.22)
     },
     clubIcon: {
         resizeMode: 'contain',

@@ -54,10 +54,8 @@ class SideMenu extends Component {
 
     _onShare() {
 
-        const link = isIos() ? `https://apps.apple.com/app/id${Config.APPLE_ID}` : `https://play.google.com/store/apps/details?id=${Config.MY_APPLICATION_ID}`;
-
         Share.share({
-            message: `Download ${Config.APP_NAME} app by clicking this link ${link}`,
+            message: `Download ${Config.APP_NAME} app by clicking one of these links:\n- iOS: ${`https://apps.apple.com/app/id${Config.APPLE_ID}`}\n- ANDROID: ${`https://play.google.com/store/apps/details?id=${Config.MY_APPLICATION_ID}`}`,
             // title: 'Best title ever!',
             // url: 'http://codingmiles.com'  // only IOS
             }, {
@@ -87,7 +85,7 @@ class SideMenu extends Component {
                                        resizeMode={'contain'}
                             />
                         </View>
-                        <View style={{paddingHorizontal: Wp(0.03)}}>
+                        <View style={{paddingHorizontal: Wp(0.01), justifyContent: 'flex-start', alignItems: 'flex-start'}}>
                             {/* <Text style={[styles.logoText, {color: this.props.theme.sideMenuBackgroundColor}]}>{Config.APP_NAME}</Text> */}
                             <FastImage source={require('../assets/appIcon/LogoText.png')}
                                        style={styles.appLogoText}
@@ -205,7 +203,7 @@ const styles = StyleSheet.create({
         color: '#000',
         lineHeight: Hp(0.025),
         fontSize: Hp(0.022),
-        paddingLeft: Wp(0.01)
+        paddingLeft: Wp(0.03)
     },
     logoDivider: {
         flexDirection: 'row', 

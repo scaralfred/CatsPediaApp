@@ -50,6 +50,8 @@ class AllBreeds extends Component {
         this.props.actions.clearSearchField();
         this.props.actions.setInitialFilters();
         this.onFilterApplied();
+
+        // alert(this.props.search)
     };
 
     componentDidMount() {
@@ -114,9 +116,21 @@ class AllBreeds extends Component {
         this._rowRenderer = this._rowRenderer.bind(this);
 
         //Since component should always render once data has changed, make data provider part of the state
+
+        const { search, selectedBodyType, selectedCoatLength, selectedBreedOrigin, selectedAssociations } = this.props;
+
+        let filteredBreeds = breeds.filter(el => {
+
+                return (
+                        el.name.toLowerCase().includes(search.toLowerCase()) 
+                        // || el.description ? el.description.toLowerCase().includes(search.toLowerCase()) : true
+                        // || el.originDescription.toLowerCase().includes(search.toLowerCase())
+                        )
+                        // && (selectedBodyType.length > 0 ? selectedBodyType.includes(el.selectedBodyType) : true)
+        })
         
         this.state = {
-            dataProvider: dataProvider.cloneWithRows(breeds)
+            dataProvider: dataProvider.cloneWithRows(filteredBreeds)
         };
         
     }
@@ -278,14 +292,15 @@ const mapStateToProps = state => ({
     appRatingGiven: state.global.appRatingGiven,
     appOpenCount: state.global.appOpenCount,
     theme: state.global.theme,
-    sortBy: state.global.sortBy,
     favorites: state.global.favorites,
     search: state.global.search,
     mainLayout: state.global.settings.mainLayout,
     heightUnitOfMeasure: state.global.settings.heightUnitOfMeasure,
     weightUnitOfMeasure: state.global.settings.weightUnitOfMeasure,
-    selectedBreedGroups: state.global.filters.selectedBreedGroups,
-    selectedClubs: state.global.filters.selectedClubs
+    selectedBodyType: state.global.filters.selectedBodyType,
+    selectedCoatLength: state.global.filters.selectedCoatLength,
+    selectedBreedOrigin: state.global.filters.selectedBreedOrigin,
+    selectedAssociations: state.global.filters.selectedAssociations
 });
 
 const mapDispatchToProps = dispatch => {

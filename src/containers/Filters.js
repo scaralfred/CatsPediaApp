@@ -247,17 +247,37 @@ class Filters extends Component {
         const {selectedAssociations} = filters;
         const { primaryColor } = this.props.theme;
 
-        const associations = [ "CFA", "FIFe", "TICA", "WCF", "FFE", "AACE", "ACF", "CCA-AFC", 
-                                "CCC of A", "CFF", "GCCF", "LOOF", "NZCF", "SACC" ]
+        const associations = [ 
+            {name: "CFA", image: require('../assets/catsClubs/CFA.png')},
+            {name: "FIFe", image: require('../assets/catsClubs/FIFe.png')},
+            {name: "TICA", image: require('../assets/catsClubs/TICA.png')},
+            {name: "WCF", image: require('../assets/catsClubs/WCF.png')},
+            {name: "FFE", image: require('../assets/catsClubs/NO-LOGO.png')},
+            {name: "AACE", image: require('../assets/catsClubs/NO-LOGO.png')},
+            {name: "ACF", image:require('../assets/catsClubs/ACF.png')},
+            {name: "CCA-AFC", image: require('../assets/catsClubs/CCA-AFC.png')},
+            {name: "CCC of A", image: require('../assets/catsClubs/CCC-of-A.png')},
+            {name: "CFF", image: require('../assets/catsClubs/CFF.png')},
+            {name: "GCCF", image: require('../assets/catsClubs/GCCF.png')},
+            {name: "LOOF", image: require('../assets/catsClubs/LOOF.png')},
+            {name: "NZCF", image: require('../assets/catsClubs/NZCF.png')},
+            {name: "SACC", image: require('../assets/catsClubs/SACC.png')}
+        ]
 
-        const AssociationRow = ({name, checked}) => (
+        const AssociationRow = ({name, checked, image}) => (
             <TouchableOpacity onPress={()=> {
                                !checked ? this.setState({...this.state, filters: {...this.state.filters, selectedAssociations: [...selectedAssociations, name]}}) 
                                : this.setState({...this.state, filters: {...this.state.filters, selectedAssociations: selectedAssociations.filter(e => e !== name)}})
                               }}
                               activeOpacity={0.8} 
                               style={{flexDirection: 'row', alignItems: 'center', paddingVertical: Hp(0.018)}}>
-                <Text style={[styles.breedOriginText, {flex: 1}]}>{name}</Text>
+                <View style={{flexDirection: 'row', flex: 1, alignItems: 'center'}}>
+                    <FastImage source={image}
+                               style={styles.clubIcon} 
+                               resizeMode={'contain'}
+                            />
+                    <Text style={[styles.breedOriginText, {paddingHorizontal: Wp(0.04)}]}>{name}</Text>
+                </View>
                 <CheckBox color={primaryColor} checked={checked}/>
             </TouchableOpacity>
         )
@@ -277,7 +297,7 @@ class Filters extends Component {
                 </TouchableOpacity>
                 <Collapsible collapsed={!associationsCollapsed}>
                     <View style={{ alignItems: 'center', paddingHorizontal: Hp(0.003), paddingTop: Hp(0.008)}}>
-                        {associations.map(el => <AssociationRow name={el} checked={selectedAssociations.includes(el)}/>)}
+                        {associations.map(el => <AssociationRow name={el.name} image={el.image} checked={selectedAssociations.includes(el.name)}/>)}
                     </View>
                 </Collapsible>
             </View>
@@ -464,7 +484,12 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: '#000',
         fontSize: Hp(0.018)
-    }
+    },
+    clubIcon: {
+        resizeMode: 'contain',
+        height: Hp(0.045),
+        width: Hp(0.045)
+    },
 })
 
 

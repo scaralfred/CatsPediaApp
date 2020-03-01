@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup
 import requests
 import re
 import json
-from utils import removeBracketsContent, namesFixer, characteristcsHelper, checkAssociation
+from utils import removeBracketsContent, namesFixer, characteristcsHelper, checkAssociation, checkBodyType, checkCoatLength, socialMediaTagFixer
 
 headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
 soupWiki = BeautifulSoup(requests.get("https://en.wikipedia.org/wiki/List_of_cat_breeds").text, 'html.parser')
@@ -31,14 +31,19 @@ for index, el in enumerate(tableWiki):
         wikipediaLink = "https://en.wikipedia.org" + el.find('a')['href'] if el.find('a') else ""
         country = removeBracketsContent(elements[0].text.replace("\n", ""))
         pictures = []
+        bodyType = removeBracketsContent(elements[2].text.replace("\n", ""))
+        coatLength = removeBracketsContent(elements[3].text.replace("\n", ""))
         origin = removeBracketsContent(elements[1].text.replace("\n", ""))
         if elements[5].find('img'): pictures.append('https:' + str(elements[5].find('img')['src']))
 
-        item['id'] = removeBracketsContent(name.replace(" ", ""))
+        print(name) 
+        item['id'] = "NorwegianForestCat" if name == "Norwegian Forest Cat" else "RagamuffinCat" if name == "Ragamuffin or Liebling (obsolete)" else "Traditional Siamese Cat" if name == "Thai or Traditional, Classic or Old-style Siamese; Wichien Maat" else socialMediaTagFixer(name, True).replace(" ", "")
         item['name'] = name
         item['wikipediaLink'] = wikipediaLink.replace("\n", "")
-        item['socialMediaTag'] = removeBracketsContent(name.replace(" ", "") + "cat")
+        item['socialMediaTag'] = "Russiancat" if name == "Russian White, Black, and Tabby" else "NorwegianForestCat" if name == "Norwegian Forest Cat" else "RagamuffinCat" if name == "Ragamuffin or Liebling (obsolete)" else "TraditionalSiamese Cat" if name == "Thai or Traditional, Classic or Old-style Siamese; Wichien Maat" else socialMediaTagFixer(name, True).replace(" ", "")
+        item['breedIdentifierName'] = "Norwegian Forest Cat" if name == "Norwegian Forest Cat" else "Ragamuffin Cat" if name == "Ragamuffin or Liebling (obsolete)" else "Thai or Traditional Siamese Cat" if name == "Thai or Traditional, Classic or Old-style Siamese; Wichien Maat" else socialMediaTagFixer(name, False)
         item['countryDescription'] = country
+        print(item['id'])
 
         if "(foundation" in country or "(some foundation" in country or "; foundation stock ultimately from Thailand" in country:
             item['country'] = re.sub(r'\(.*\)', '', country).replace('; foundation stock ultimately from Thailand', "")
@@ -81,12 +86,12 @@ for index, el in enumerate(tableWiki):
         elif origin == "": item['origin'] = "Natural"
         else: item['origin'] = origin
 
-        item['bodyType'] = removeBracketsContent(elements[2].text.replace("\n", ""))
-        item['coatLength'] = removeBracketsContent(elements[3].text.replace("\n", ""))
+        item['bodyType'] = checkBodyType(bodyType)
+        item['coatLength'] = checkCoatLength(coatLength)
         item['pattern'] = removeBracketsContent(elements[4].text.replace("\n", ""))
         item['pictures'] = pictures
 
-        print(name)
+        # print(name)
 
         if el.find('a'):
             soupBreedLink = BeautifulSoup(requests.get(wikipediaLink).text, 'html.parser')
@@ -100,19 +105,20 @@ for index, el in enumerate(tableWiki):
             for index, pic in enumerate(breedPicsDiv):
                 if name == "Siamese (modern)":
                     if index == 2:
-                        print('nothing')
+                        # print('nothing')
+                        pass
                     else: 
-                        print('https:' + str(pic.find('img')['src']))
+                        # print('https:' + str(pic.find('img')['src']))
                         pictures.append('https:' + str(pic.find('img')['src']))
                 else: 
-                        print('https:' + str(pic.find('img')['src']))
+                        # print('https:' + str(pic.find('img')['src']))
                         pictures.append('https:' + str(pic.find('img')['src']))
             
 
             for linkText in linksText:
                 if checkAssociation(linkText.text):
                     associations.append(linkText.text)
-                    print(linkText.text)
+                    # print(linkText.text)
 
         if len(associations) > 0:
             item['associations'] = associations

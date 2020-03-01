@@ -179,6 +179,26 @@ def namesFixer(name):
 
     return name
 
+def socialMediaTagFixer(name, noSpace):
+    
+    if name == "Asian cat": return "Asian Cat"
+    if name == "Cymric or Longhaired Manx": return "Cymric Cat"
+    if name == "Donskoy or Don Sphynx": return "Donskoy Cat"
+    if name == "Dragon Li or Chinese Li Hua": return "Dragon Li Cat"
+    if name == "Himalayan or Colorpoint Persian":return "Himalayan Cat"
+    if name == "Javanese or Colorpoint Longhair": return "Javanese Cat"
+    if name == "Kurilian Bobtail or Kuril Islands Bobtail": return "Kurilian Bobtail Cat"
+    if name == "Norwegian Forest Cat": "Norwegian Forest Cat"
+    if name == "Oriental Longhair or Foreign Longhair; Mandarin; British Angora (obsolete)": return "Oriental Longhair cat"
+    if name == "Persian (modern)": return "Persian Modern Cat"
+    if name == "Persian (traditional)": return "Persian Traditional Cat"
+    if name == "Ragamuffin or Liebling (obsolete)": "Ragamuffin Cat"
+    if name == "Siamese (modern)": return "Siamese Modern Cat"
+    if name == "Siberian or Siberian Forest Cat; Neva Masquerade (colorpoint variety)": return "Siberian Cat"
+    if name == "Thai or Traditional, Classic or Old-style Siamese; Wichien Maat": "Thai or Traditional Siamese Cat"
+
+    return ((name + ' cat').replace(" ", "") if noSpace else name + ' cat' )
+
 def characteristcsHelper(name):
 
     if name == "Colourpoint Shorthair": return "https://cattime.com/cat-breeds/colorpoint-shorthair-cats"
@@ -209,3 +229,18 @@ def checkAssociation(name):
     if name in associations: return True
 
     return False
+
+def checkBodyType(bodyType):
+
+    if bodyType == "Moderate and muscular": return "Moderate and Muscular"
+    if bodyType == "Muscular, Moderate": return "Moderate and Muscular"
+    if bodyType == "Moderate,   Oriental": return "Oriental, Moderate"
+    if bodyType == "Moderate, Oriental": return "Oriental, Moderate"
+
+    return bodyType
+
+def checkCoatLength(coatLength):
+
+    if coatLength == "Short/long": return "Short and long"
+
+    return coatLength

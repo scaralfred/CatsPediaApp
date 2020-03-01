@@ -290,7 +290,7 @@ class CameraScreen extends Component {
             } else if (cameraView && cameraPermission == "granted") {
                 return (
                     <View style={styles.container}>
-                        {/* <StatusBar backgroundColor="blue" barStyle="light-content" /> */}
+                        <StatusBar backgroundColor="#000" barStyle="light-content" />
                         <Header />
                         <View style={{flex: 1}}>
                             <RNCamera

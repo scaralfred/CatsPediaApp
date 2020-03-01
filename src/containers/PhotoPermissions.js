@@ -130,7 +130,7 @@ class PhotoPermissions extends Component {
                 <View style={styles.header}>
                     <View style={{ width: Wp(0.15) }} />
                     <View style={styles.titleContainer}>
-                        <Text style={styles.headerText}>Photo Permissions</Text>
+                        <Text style={styles.headerText}>Breed Identifier</Text>
                     </View>
                     <TouchableOpacity onPress={()=> Navigation.pop(this.props.componentId)}
                                       activeOpacity={0.8} 

@@ -134,8 +134,8 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         missingDimensionStrategy "RNN.reactNativeVersion", "reactNative60"
         missingDimensionStrategy 'react-native-camera', 'general'
-        versionCode 109
-        versionName "1.0.9"
+        versionCode 100
+        versionName "1.0.0"
         resValue "string", "build_config_package", "com.quickpedia"
     }
     splits {
