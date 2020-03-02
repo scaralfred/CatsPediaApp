@@ -20,7 +20,7 @@ Gone are the days when you’d have to search through hundreds of pages or scrol
 And to make things more interesting, the app lets you choose between four different layouts.
 
 - Breed Identification:
-The main charm of the app is the Cat Identifier feature that lets you know the breed of any cat. All you have to do is take the picture of the dcat or choose a photo of your cat from your phone and click. Within a second the app’s efficient algorithm will tell you the exact breed of the cat in the picture.
+The main charm of the app is the Cat Identifier feature that lets you know the breed of any cat. All you have to do is take the picture of the cat or choose a photo of your cat from your phone and click. Within a second the app’s efficient algorithm will tell you the exact breed of the cat in the picture.
 
 - Vast database:
 The app contains data of more than ninety Cat breeds in the world. Moreover, it also includes data of the most popular cross and mutation breeds so there is hardly any cat in the world that cannot be identified using the app.
@@ -29,14 +29,15 @@ The app contains data of more than ninety Cat breeds in the world. Moreover, it 
 If you want to adopt a cat and cannot choose between several Cats Breeds, this app will do that for you. Using various filters of the app you will be able to find the best cat breed that would be perfect for you and your family.
 
 - Searching:
-Maybe you want to search for a particular dcat breed but you can’t seem to remember the name. This app lets you find all the Cat breeds using efficient sorting parameters such as origin, pbody type, federations & clubs, etc.
-And more…
+Maybe you want to search for a particular cat breed but you can’t seem to remember the name. This app lets you find all the Cat breeds using efficient sorting parameters such as origin, body type, coat length, federations & clubs, etc.
+
+And additionally…
 
 There are countless other features such as cute photos and YouTube videos of all the Cat breeds, standardized metrics for body type and breed origin, and options for feedback.
 
 And if you are bored, you can always take a photo of yourself to see what breed would you be if you were a cat!
 
-Isn’t that exciting? So, what’s holding you back? Download the Cats Pedia – Cat Breed Identifier app right away and become one of the true Cat Lovers!
+Isn’t that exciting? So, what’s holding you back? Download the Cats Pedia – Cat Breeds Identifier app right away and become one of the true Cat Lovers!
 
 
 Do you have any questions or feedback?
