@@ -15,11 +15,11 @@ From breed identification to breed selection, this Cat Identifier app is your ve
 But what makes it better than all the other Cat Apps in the market?
 Well, below are some of the best features that make this Cat Identifier app better than all other Cat Apps in the market:
 
-- Interface
+- Interface: 
 Gone are the days when you’d have to search through hundreds of pages or scroll through countless web pages to find what you are looking for. With this app, you do everything with just a click.
 And to make things more interesting, the app lets you choose between four different layouts.
 
-- Breed Identification
+- Breed Identification:
 The main charm of the app is the Cat Identifier feature that lets you know the breed of any cat. All you have to do is take the picture of the dcat or choose a photo of your cat from your phone and click. Within a second the app’s efficient algorithm will tell you the exact breed of the cat in the picture.
 
 - Vast database:
