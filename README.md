@@ -1,9 +1,9 @@
 # Cats Pedia (Available on the App Store & Google Play Store)
 A fun and interactive encyclopedia of Cats Breeds for all the Cat Lovers.
 
-<img src="https://scontent.fmnl9-1.fna.fbcdn.net/v/t1.0-9/86287822_100982118160320_1640396062160060416_n.png?_nc_cat=101&_nc_ohc=DcKNJPwyeZIAX9tIG4-&_nc_ht=scontent.fmnl9-1.fna&oh=41309f3848bfce0c7b2f5009deb68cf3&oe=5F02A601" align="left" width="300" >
+<img src="https://scontent.fmnl9-1.fna.fbcdn.net/v/t1.0-9/p960x960/87962888_107923410817224_5339371289322717184_o.png?_nc_cat=107&_nc_sid=85a577&_nc_ohc=aufp-DZA5GsAX8OhTIX&_nc_ht=scontent.fmnl9-1.fna&oh=4d376f35782bb3a29c5047ce0f1b1e07&oe=5E956DDD" align="left" width="300" >
 
-App Store -> https://itunes.apple.com/app/id----------------
+App Store -> https://itunes.apple.com/app/id1501298136
 
 Goole Play Store => https://play.google.com/store/apps/details?id=com.quickpedia.cats
 
@@ -42,4 +42,4 @@ Isn’t that exciting? So, what’s holding you back? Download the Cats Pedia �
 
 Do you have any questions or feedback?
 
-Contact: catbreeds.feedback@gmail.com
+Contact: catspedia.feedback@gmail.com
